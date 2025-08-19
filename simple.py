@@ -16,17 +16,22 @@ def demo():
         # Convert to a string encoding (base64 or hex is common)
         hex_str = bytes([byte_values[i]]).hex()
         print("As hex string:", hex_str)
-
 # demo()
 
 import random
 import json
 import math
+import logging
 
-SECRET_MESSAGE = bytes([13, 17])
+DEBUG = True
+logger = logging.getLogger(__name__)
+log_level = logging.DEBUG if DEBUG else logging.INFO
+logging.basicConfig(level=log_level, format="")
 
-N_TRIALS = 20
-N_CHOICES = 10
+# SECRET_MESSAGE = bytes([13, 17])
+
+N_TRIALS = 30  # round_up(len(SECRET_MESSAGE)*8/3)
+N_CHOICES = 33  # top_p
 A_TOTAL = 1.1
 B_TOTAL = 1.3
 
@@ -43,9 +48,95 @@ for _ in range(N_TRIALS):
 # check that all values in each dict sum to around 0.7 - 0.9
 # check = [sum(e.values()) for e in selections]
 # print(json.dumps(check, indent=2))
+# print(json.dumps(selections, indent=2))
 
-# TODO - encode the secret message by sampling the selections items 
-# to produce a sequence of chars which represent the secret message
-# based on the idea that selections is static and will be known at
-# encode and decode time
 
+def encode(message: bytes, chunk_size: int = 3) -> str:
+    num_iters = math.ceil(len(message)*8/chunk_size)
+    bits_message = "".join([format(_byte, "08b") for _byte in message])
+    logger.debug(f"encode_bits: {bits_message}")
+    int_message = []
+    for i in range(num_iters):
+        chunk_bits = bits_message[(i*chunk_size):(i*chunk_size)+chunk_size]
+        chunk_int = int(chunk_bits, 2)
+        int_message.append(chunk_int)
+    enc_message = ""
+    for i in range(len(int_message)):
+        enc_message += str(list(selections[i].keys())[int_message[i]])
+    return enc_message
+
+def decode(enc_message: str, chunk_size: int = 3) -> bytes:
+    decoded_bits = ""
+    for i, char in enumerate(enc_message):
+        current_chunk_size = len(enc_message) % chunk_size if (i == (len(enc_message)-1)) else chunk_size
+        # current_chunk_size = chunk_size
+        # if (i == (len(enc_message)-1)) and ((len(enc_message) % chunk_size) != 0):
+        #     current_chunk_size = len(enc_message) % chunk_size
+        decoded_bits += format(int(char), f"0{current_chunk_size}b")
+    logger.debug(f"decode_bits: {decoded_bits}")
+    decoded_ints = []
+    for i in range(len(decoded_bits) // 8):
+        decoded_ints.append(int(decoded_bits[i*8:(i*8)+8], 2))
+    return bytes(decoded_ints)
+
+
+def example():
+    msg = bytes([19,17])
+    print("orig msg:", msg)
+    msg_enc = encode(msg)
+    print("msg_enc:", msg_enc)
+    dec_msg = decode(msg_enc)
+    print("dec_msg:", dec_msg)
+    assert msg == dec_msg
+
+def example2():
+    msg = bytes([19,17])
+    print("orig msg:", msg)
+    msg_enc = encode(msg, chunk_size=3)
+    print("msg_enc:", msg_enc)
+    dec_msg = decode(msg_enc, chunk_size=3)
+    print("dec_msg:", dec_msg)
+    assert msg == dec_msg
+
+if __name__ == "__main__":
+    # example()
+    example2()
+
+### test section ------
+import pytest
+
+@pytest.mark.parametrize(
+    "input_bytes, chunk_size",
+    [
+        (bytes([19,1,244]), 3),
+        (bytes([19,1,244]), 1),
+        (bytes([17,5]), 3),
+        (bytes([17,5]), 1),
+        (bytes([255]), 1),
+        (bytes([0]), 1),
+    ],
+)
+def test_encode_decode(input_bytes, chunk_size):
+    msg_enc = encode(input_bytes, chunk_size=chunk_size)
+    logger.debug("msg_enc:", msg_enc)
+    dec_msg = decode(msg_enc, chunk_size=chunk_size)
+    logger.debug("dec_msg:", dec_msg)
+    assert input_bytes == dec_msg    
+
+
+# should work but currently does not
+@pytest.mark.xfail()
+@pytest.mark.parametrize(
+    "input_bytes, chunk_size",
+    [
+        (bytes([19,1,244]), 4),
+        (bytes([19,1,244]), 2),
+        (bytes([17,5]), 2),
+    ],
+)
+def test_encode_decode_2(input_bytes, chunk_size):
+    msg_enc = encode(input_bytes, chunk_size=chunk_size)
+    logger.debug("msg_enc:", msg_enc)
+    dec_msg = decode(msg_enc, chunk_size=chunk_size)
+    logger.debug("dec_msg:", dec_msg)
+    assert input_bytes == dec_msg    
