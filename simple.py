@@ -21,15 +21,18 @@ def demo():
 
 import random
 import json
+import math
 
 SECRET_MESSAGE = bytes([13, 17])
 
 N_TRIALS = 20
 N_CHOICES = 10
 
-selections = [
-    {i: random.random() for i in range(N_CHOICES)}
-    for _ in range(N_TRIALS)
-]
+selections = []
+for _ in range(N_TRIALS):
+    choices = {i: random.random() for i in range(N_CHOICES)}
+    exps = [math.exp(v) for v in choices.values()]
+    sum_exps = sum(exps)
+    selections.append({k: v / sum_exps for k, v in zip(choices.keys(), exps)})
 
 print(json.dumps(selections, indent=2))
