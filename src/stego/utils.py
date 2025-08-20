@@ -17,9 +17,12 @@ def allowed_1(tok: str):
 def allowed_2(tok: str):
     """allowed: only isalpha and spaces"""
     if tok.startswith("\\u"): return False
-    if "\\n" in tok: return True
-    if "," in tok: return True
-    if "." in tok: return True
+    # if "\\n" in tok: return True
+    if tok == ", ": return True
+    if tok == ",": return True
+    if tok == " ,": return True
+    if tok == ".": return True
+    if tok == ". ": return True
     return str(tok).replace(" ", "").isalpha()
 
 if __name__ == "__main__":
