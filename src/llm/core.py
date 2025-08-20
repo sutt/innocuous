@@ -27,7 +27,7 @@ def infer_llm(
     num_output=10
     ):
     output = llm(
-        PROMPT, 
+        prompt, 
         max_tokens=1, 
         logprobs=num_output,
         echo=False,
@@ -41,5 +41,6 @@ def demo():
     top_logprobs = infer_llm(llm)
     top_logprobs = cvt_to_logprobs(top_logprobs)
     print(to_json(top_logprobs))
+
     
     
