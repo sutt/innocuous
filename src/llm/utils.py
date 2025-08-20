@@ -36,3 +36,29 @@ log_callback = ctypes.CFUNCTYPE(None, ctypes.c_int,
             ctypes.c_char_p, ctypes.c_void_p)(my_log_callback)
 
 llama_log_set(log_callback, ctypes.c_void_p())
+
+# llm helpers ------
+
+def to_json(data: dict) -> str:
+    data_t = {k:float(v) for k,v in data.items()}
+    return json.dumps(
+        data_t, 
+        indent=2,
+    )
+
+def cvt_to_logprobs(data: dict) -> str:
+    return {k:np.exp(v) for k,v in data.items()}
+
+
+def sum_probs(logprobs: dict) -> float:
+    tmp = {k: np.exp(v) for k,v in logprobs.items()}
+    return float(np.sum(np.array(list(tmp.values()))))
+
+
+if __name__ == "__main__":
+    
+    
+    def demo_tojson():
+        d = {'hello': np.float32(1.23), 'world': np.float32(-0.999999)}
+        print(to_json(d))
+    demo_tojson()
