@@ -60,39 +60,62 @@ def main_encode(
     return current_prompt
 
 def main_decode(
-    llm, 
-    encoded_prompt, 
-    initial_prompt, 
-    chunk_size, 
+    llm,
+    encoded_prompt,
+    initial_prompt,
+    chunk_size,
     num_logprobs,
-    ):
+):
     message_carrying_text = encoded_prompt[len(initial_prompt):]
+    memo = {}
 
-    current_prompt = initial_prompt
-    decoded_ints = []
-    remaining_text = message_carrying_text
+    def solve(current_prompt, remaining_text):
+        if not remaining_text:
+            return []
 
-    while remaining_text:
+        state = (current_prompt, remaining_text)
+        if state in memo:
+            return memo[state]
+
         toks = infer_llm(llm, prompt=current_prompt, num_output=num_logprobs)
         toks = filter_tok(toks)
 
-        found_match = False
-        for i, token_str in enumerate(toks.keys()):
+        possible_matches = []
+        
+        num_candidate_toks = 2**chunk_size
+        candidate_toks = list(toks.keys())
+        
+        if len(candidate_toks) < num_candidate_toks:
+            logger.warning(f"Not enough tokens after filtering. Have {len(candidate_toks)}, need {num_candidate_toks}")
+            num_candidate_toks = len(candidate_toks)
+
+        candidate_toks_slice = candidate_toks[:num_candidate_toks]
+
+        for i, token_str in enumerate(candidate_toks_slice):
             if remaining_text.startswith(token_str):
-                decoded_int = i
-                decoded_ints.append(decoded_int)
+                possible_matches.append((i, token_str))
+        
+        possible_matches.sort(key=lambda x: len(x[1]), reverse=True)
 
-                current_prompt += token_str
-                remaining_text = remaining_text[len(token_str):]
-                found_match = True
-                logger.debug(f"Found token: '{token_str}', index: {decoded_int}")
-                break
+        for decoded_int, token_str in possible_matches:
+            new_prompt = current_prompt + token_str
+            new_remaining = remaining_text[len(token_str):]
+            
+            result = solve(new_prompt, new_remaining)
 
-        if not found_match:
-            logger.error("Could not decode next token. Aborting.")
-            logger.error(f"Remaining text: '{remaining_text}'")
-            logger.error(f"Candidate tokens: {list(toks.keys())}")
-            break
+            if result is not None:
+                solution = [decoded_int] + result
+                memo[state] = solution
+                return solution
+        
+        memo[state] = None
+        return None
+
+    decoded_ints = solve(initial_prompt, message_carrying_text)
+
+    if decoded_ints is None:
+        logger.error("Failed to decode message.")
+        return None
 
     logger.debug(f"decoded_ints: {decoded_ints}")
 
