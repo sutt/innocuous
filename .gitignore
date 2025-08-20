@@ -1,8 +1,15 @@
+# python specfic ignores
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+src/*.egg-info
 .ipynb_checkpoints
+
 # Agro project directory
 .agdocs/
-
-
 
 # Agro worktrees
 trees/

@@ -4,6 +4,25 @@ import math
 import logging
 from typing import List
 
+"""
+Script to encode / decode byte data into array of integers.
+    run: python simple.py - for an example
+    run: pytest simple.py - to test a variety of message and chunk_size's
+
+The integers can be used to select which of the top logprobs to sample 
+during the inference step of llm generation.
+
+The size of the integers is controlled by chunk_size paramater:
+    max_integer_size = 2**chunk_size
+        chunk_size = 3 
+        => 3 bits encoded per token
+        => max_integer is 8 which is roughly correct
+
+The `selections` array here is simulating top logprobs
+    - but really these values have nothing to do with the current encode/decode
+
+"""
+
 # Toggle below to control logging level
 DEBUG = True
 logger = logging.getLogger(__name__)
@@ -75,6 +94,8 @@ def encode(message: bytes, chunk_size: int = 3) -> List[str]:
         int_message.append(chunk_int)
     enc_message = []
     for i in range(len(int_message)):
+        # note: selections really aren't used here other 
+        # than a placeholder for range of ints
         enc_message.append( str(list(selections[i].keys())[int_message[i]]) )
     return enc_message
 
