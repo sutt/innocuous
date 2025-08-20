@@ -4,10 +4,9 @@ import math
 import logging
 from typing import List
 
-DEBUG = True
+
 logger = logging.getLogger(__name__)
-log_level = logging.DEBUG if DEBUG else logging.INFO
-logging.basicConfig(level=log_level, format="")
+
 
 def encode(message: bytes, chunk_size: int = 3) -> List[int]:
     num_iters = math.ceil(len(message)*8/chunk_size)

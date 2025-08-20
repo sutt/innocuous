@@ -14,43 +14,26 @@ from stego.basic import (
     decode,
 )
 from stego.utils import (
-    filter_non_alpha,
     filter_tok,
 )
 
 
-DEBUG = True
+DEBUG = False
 logger = logging.getLogger(__name__)
 log_level = logging.DEBUG if DEBUG else logging.INFO
 logging.basicConfig(level=log_level, format="")
 
 
-def llm_example():
-    demo()
-
-def stego_demo():
-    msg = bytes([19,17])
-    print("orig msg:", msg)
-    msg_enc = encode(msg)
-    print("msg_enc:", msg_enc)
-    msg_enc_t = [str(e) for e in msg_enc]
-    dec_msg = decode(msg_enc)
-    print("dec_msg:", dec_msg)
-    assert msg == dec_msg
-
-def main_encode(llm):
-    
-    msg = bytes([19,17])
-    # msg = bytes([19,17,99,0,3,230,62])
-    # msg = bytes([random.randint(0,255) for e in range(20)])
-    logger.debug(f"msg: {msg}")
-    
-    num_logprobs = 40
-    chunk_size = 2
+def main_encode(
+    llm, 
+    initial_prompt, 
+    msg, 
+    chunk_size, 
+    num_logprobs,
+    ):
     
     enc_ints = encode(msg, chunk_size=chunk_size)
 
-    initial_prompt="Below is an iambic penatameter poem. Complete it:\nThe king" 
     current_prompt = initial_prompt
     
     for enc_int in enc_ints:
@@ -71,9 +54,15 @@ def main_encode(llm):
 
     logger.info(f"final: {current_prompt}")
 
-    return current_prompt, initial_prompt, msg, chunk_size, num_logprobs
+    return current_prompt
 
-def main_decode(llm, encoded_prompt, initial_prompt, original_msg, chunk_size, num_logprobs):
+def main_decode(
+    llm, 
+    encoded_prompt, 
+    initial_prompt, 
+    chunk_size, 
+    num_logprobs,
+    ):
     message_carrying_text = encoded_prompt[len(initial_prompt):]
 
     current_prompt = initial_prompt
@@ -107,12 +96,39 @@ def main_decode(llm, encoded_prompt, initial_prompt, original_msg, chunk_size, n
     decoded_msg = decode(decoded_ints, chunk_size=chunk_size)
     logger.info(f"decoded_msg: {decoded_msg}")
 
+    return decoded_msg
+
+
+def main():
+    
+    # original_msg = bytes([19,17])
+    original_msg = bytes([random.randint(0,255) for e in range(20)])
+    logger.info(f"encoded_msg: {original_msg}")
+
+    chunk_size = 2
+    initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king" 
+    num_logprobs = 40
+
+    llm = init_llm()
+    
+    encoded_prompt = main_encode(
+        llm=llm,
+        initial_prompt=initial_prompt,
+        msg=original_msg,
+        chunk_size=chunk_size,
+        num_logprobs=num_logprobs,
+    )
+    
+    decoded_msg = main_decode(
+        llm=llm, 
+        encoded_prompt=encoded_prompt, 
+        initial_prompt=initial_prompt, 
+        chunk_size=chunk_size, 
+        num_logprobs=num_logprobs,
+    )
+    
     assert original_msg == decoded_msg
 
 
 if __name__ == "__main__":
-    # llm_example()
-    # stego_demo()
-    llm = init_llm()
-    encoded_prompt, initial_prompt, msg, chunk_size, num_logprobs = main_encode(llm)
-    main_decode(llm, encoded_prompt, initial_prompt, msg, chunk_size, num_logprobs)
+    main()
