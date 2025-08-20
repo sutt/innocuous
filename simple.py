@@ -68,10 +68,24 @@ def encode(message: bytes, chunk_size: int = 3) -> str:
 def decode(enc_message: str, chunk_size: int = 3) -> bytes:
     decoded_bits = ""
     for i, char in enumerate(enc_message):
-        current_chunk_size = len(enc_message) % chunk_size if (i == (len(enc_message)-1)) else chunk_size
+        # v1
+        # current_chunk_size = len(enc_message) % chunk_size if (i == (len(enc_message)-1)) else chunk_size
+        # v2
         # current_chunk_size = chunk_size
-        # if (i == (len(enc_message)-1)) and ((len(enc_message) % chunk_size) != 0):
-        #     current_chunk_size = len(enc_message) % chunk_size
+        # if ( 
+        #     (i == (len(enc_message)-1)) and 
+        #     ( ((len(enc_message) * chunk_size) % 8) != 0)
+        #     ):
+        #     # current_chunk_size = len(enc_message) % chunk_size
+        #     current_chunk_size =  ((len(enc_message)) * chunk_size) % 8
+        # v3
+        # current_chunk_size = chunk_size
+        # if (i == (len(enc_message)-1)) :
+        #     current_chunk_size = 8 - (len(decoded_bits) % 8)
+        # v4
+        current_chunk_size = chunk_size
+        if ((i == (len(enc_message)-1)) and ((8 % chunk_size) != 0 )):
+            current_chunk_size = 8 - (len(decoded_bits) % 8)
         decoded_bits += format(int(char), f"0{current_chunk_size}b")
     logger.debug(f"decode_bits: {decoded_bits}")
     decoded_ints = []
@@ -90,11 +104,11 @@ def example():
     assert msg == dec_msg
 
 def example2():
-    msg = bytes([19,17])
+    msg = bytes([19,17, 15])
     print("orig msg:", msg)
-    msg_enc = encode(msg, chunk_size=3)
+    msg_enc = encode(msg, chunk_size=4)
     print("msg_enc:", msg_enc)
-    dec_msg = decode(msg_enc, chunk_size=3)
+    dec_msg = decode(msg_enc, chunk_size=4)
     print("dec_msg:", dec_msg)
     assert msg == dec_msg
 
@@ -125,7 +139,7 @@ def test_encode_decode(input_bytes, chunk_size):
 
 
 # should work but currently does not
-@pytest.mark.xfail()
+# @pytest.mark.xfail()
 @pytest.mark.parametrize(
     "input_bytes, chunk_size",
     [
