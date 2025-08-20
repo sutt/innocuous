@@ -38,7 +38,7 @@ def stego_demo():
     print("dec_msg:", dec_msg)
     assert msg == dec_msg
 
-def main_encode():
+def main_encode(llm):
     
     msg = bytes([19,17])
     # msg = bytes([19,17,99,0,3,230,62])
@@ -50,8 +50,8 @@ def main_encode():
     
     enc_ints = encode(msg, chunk_size=chunk_size)
 
-    llm = init_llm()
-    current_prompt="Below is an iambic penatameter poem. Complete it:\nThe king" 
+    initial_prompt="Below is an iambic penatameter poem. Complete it:\nThe king" 
+    current_prompt = initial_prompt
     
     for enc_int in enc_ints:
 
@@ -71,9 +71,48 @@ def main_encode():
 
     logger.info(f"final: {current_prompt}")
 
+    return current_prompt, initial_prompt, msg, chunk_size, num_logprobs
+
+def main_decode(llm, encoded_prompt, initial_prompt, original_msg, chunk_size, num_logprobs):
+    message_carrying_text = encoded_prompt[len(initial_prompt):]
+
+    current_prompt = initial_prompt
+    decoded_ints = []
+    remaining_text = message_carrying_text
+
+    while remaining_text:
+        toks = infer_llm(llm, prompt=current_prompt, num_output=num_logprobs)
+        toks = filter_tok(toks)
+
+        found_match = False
+        for i, token_str in enumerate(toks.keys()):
+            if remaining_text.startswith(token_str):
+                decoded_int = i
+                decoded_ints.append(decoded_int)
+
+                current_prompt += token_str
+                remaining_text = remaining_text[len(token_str):]
+                found_match = True
+                logger.debug(f"Found token: '{token_str}', index: {decoded_int}")
+                break
+
+        if not found_match:
+            logger.error("Could not decode next token. Aborting.")
+            logger.error(f"Remaining text: '{remaining_text}'")
+            logger.error(f"Candidate tokens: {list(toks.keys())}")
+            break
+
+    logger.debug(f"decoded_ints: {decoded_ints}")
+
+    decoded_msg = decode(decoded_ints, chunk_size=chunk_size)
+    logger.info(f"decoded_msg: {decoded_msg}")
+
+    assert original_msg == decoded_msg
 
 
 if __name__ == "__main__":
     # llm_example()
     # stego_demo()
-    main_encode()
+    llm = init_llm()
+    encoded_prompt, initial_prompt, msg, chunk_size, num_logprobs = main_encode(llm)
+    main_decode(llm, encoded_prompt, initial_prompt, msg, chunk_size, num_logprobs)
