@@ -1,0 +1,1 @@
+uvx --from notebook jupyter notebook
