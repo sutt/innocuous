@@ -34,11 +34,18 @@ def accept_tok(data: dict) -> str | None:
     """return a token if acceptance is a match; otherwise None"""
     pairs = [(k,v) for k,v in data.items()]    
     if acceptance_criteria_1(pairs): return pairs[0][0]
-    # if acceptance_criteria_2(pairs): return 
+    if acceptance_criteria_2(pairs): return pairs[0][0]
     return None
 
-def acceptance_criteria_1(pairs: List[Tuple[str, float]]):
+def acceptance_criteria_1(pairs: List[Tuple[str, float]]) -> bool:
     if pairs[0][0] == "\n": return True
+    return False
+
+def acceptance_criteria_2(pairs: List[Tuple[str, float]], thresh=0.7) -> bool:
+    if pairs[0][1] >= thresh: return True
+    return False
+    
+
 
 
 if __name__ == "__main__":

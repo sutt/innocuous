@@ -45,7 +45,8 @@ def main_encode(
 
         toks = infer_llm(llm, prompt=current_prompt, num_output=num_logprobs)
 
-        logger.debug(to_json(cvt_to_logprobs(toks)))
+        toks = cvt_to_logprobs(toks)
+        logger.debug(to_json(toks))
 
         toks = filter_tok(toks)
 
@@ -137,9 +138,9 @@ def main_decode(
 
 def example_random_msg():
     
-    original_msg = bytes([255,255])
+    # original_msg = bytes([255,255])
     # original_msg = bytes([0,0])
-    # original_msg = bytes([random.randint(0,255) for e in range(20)])
+    original_msg = bytes([random.randint(0,255) for e in range(20)])
     logger.info(f"encoded_msg: {original_msg}")
 
     chunk_size = 3
@@ -149,10 +150,10 @@ def example_random_msg():
     # initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king" 
     
     # high prob word: (" land" 0.91)
-    # initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, whose power and pride, were known through the"
+    initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, whose power and pride, were known through the"
     
     # punctuation is top token: ("\n" 0.3)
-    initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, whose power and pride, were known through the realms of earth to shine,"
+    # initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, whose power and pride, were known through the realms of earth to shine,"
 
     llm = init_llm()
     
@@ -165,6 +166,8 @@ def example_random_msg():
     )
     print("done with encode...")
     # must re-init llm here or decode fails for some reason
+    # IMPORTANT: this can trigger OOM silent fail, in which case decode
+    # and verify message match never runs and program exits as if succesful.
     llm = init_llm()
     print("starting decode...")
     
@@ -178,6 +181,7 @@ def example_random_msg():
     
     print(f"decoded_msg: {decoded_msg}")
     assert original_msg == decoded_msg
+    print("\ndone. it worked!")
 
 
 def example_addr():
