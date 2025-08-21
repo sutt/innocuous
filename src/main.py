@@ -165,7 +165,28 @@ def example_addr():
     
     assert original_msg == decoded_msg
 
+def test_decode_branch():
+    addr = "12Wfw4L3oPJFk2q6osDoZLYAwdFkhvgt4E"
+    info = decode_bitcoin_address(addr)
+    original_msg = bytes.fromhex(info["payload_hex"])
+    chunk_size = 2
+    initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king"
+    num_logprobs = 40
+
+    encoded_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, a man of noble grace, did dwell in state within a towr that loomed above all other loft, where eagles, soaring free in azured heights would cast, in envied sight, a winking glace at him who ruled, and in his hand a golden rod of rule he held alight, with sceptered power to rule and right, and with"
+    
+    llm = init_llm()
+    decoded_msg = main_decode(
+        llm=llm, 
+        encoded_prompt=encoded_prompt, 
+        initial_prompt=initial_prompt, 
+        chunk_size=chunk_size, 
+        num_logprobs=num_logprobs,
+    )
+    
+    assert original_msg == decoded_msg
 
 if __name__ == "__main__":
     # main()
-    example_addr()
+    # example_addr()
+    test_decode_branch()
