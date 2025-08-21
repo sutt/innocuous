@@ -125,10 +125,10 @@ def main_decode(
     return decoded_msg
 
 
-def main():
+def example_random_msg():
     
-    original_msg = bytes([19,17])
-    # original_msg = bytes([random.randint(0,255) for e in range(20)])
+    # original_msg = bytes([19,17])
+    original_msg = bytes([random.randint(0,255) for e in range(20)])
     logger.info(f"encoded_msg: {original_msg}")
 
     chunk_size = 2
@@ -144,6 +144,9 @@ def main():
         chunk_size=chunk_size,
         num_logprobs=num_logprobs,
     )
+
+    # must re-init llm here of decode fails for some reason
+    llm = init_llm()
     
     decoded_msg = main_decode(
         llm=llm, 
@@ -189,35 +192,9 @@ def example_addr():
         num_logprobs=num_logprobs,
     )
     
-    try:
-        assert original_msg == decoded_msg
-    except:
-        print(original_msg)
-        print(decoded_msg)
-
-def test_decode_branch():
-    addr = "12Wfw4L3oPJFk2q6osDoZLYAwdFkhvgt4E"
-    info = decode_bitcoin_address(addr)
-    original_msg = bytes.fromhex(info["payload_hex"])
-    chunk_size = 2
-    initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king"
-    num_logprobs = 40
-
-    encoded_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, a man of noble grace, did dwell in state within a towr that loomed above all other loft, where eagles, soaring free in azured heights would cast, in envied sight, a winking glace at him who ruled, and in his hand a golden rod of rule he held alight, with sceptered power to rule and right, and with"
-    
-    llm = init_llm()
-    decoded_msg = main_decode(
-        llm=llm, 
-        encoded_prompt=encoded_prompt, 
-        initial_prompt=initial_prompt, 
-        chunk_size=chunk_size, 
-        num_logprobs=num_logprobs,
-    )
-    print(original_msg)
-    print(decoded_msg)
     assert original_msg == decoded_msg
 
+
 if __name__ == "__main__":
-    # main()
-    example_addr()
-    # test_decode_branch()
+    example_random_msg()
+    # example_addr()

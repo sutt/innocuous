@@ -11,19 +11,19 @@ from .utils import (
 )
     
 
-PROMPT = "The capital of France is"
-
 @suppress_stderr
-def init_llm():
+def init_llm(
+    model_path="/home/user/dev/innocuous/data/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
+):
     return Llama(
-        model_path="../data/mistral-7b-instruct-v0.2.Q4_K_M.gguf", 
+        model_path=model_path, 
         logits_all=True,
     )
 
 @suppress_stderr
 def infer_llm(
     llm, 
-    prompt=PROMPT,
+    prompt,
     num_output=10
     ):
     output = llm(
