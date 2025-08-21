@@ -89,7 +89,21 @@ def main_decode(
             return memo[state]
 
         toks = infer_llm(llm, prompt=current_prompt, num_output=num_logprobs)
+        toks = cvt_to_logprobs(toks)
         toks = filter_tok(toks)
+
+        accepted_tok = accept_tok(toks)
+        if accepted_tok is not None:
+            if remaining_text.startswith(accepted_tok):
+                new_prompt = current_prompt + accepted_tok
+                new_remaining = remaining_text[len(accepted_tok):]
+                
+                result = solve(new_prompt, new_remaining)
+                memo[state] = result
+                return result
+            else:
+                memo[state] = None
+                return None
 
         possible_matches = []
         
