@@ -1,3 +1,8 @@
+from typing import (
+    List,
+    Tuple,
+)
+
 def filter_non_alpha(data: dict) -> dict:
     return {
         k:v for k,v in data.items()
@@ -17,13 +22,24 @@ def allowed_1(tok: str):
 def allowed_2(tok: str):
     """allowed: only isalpha and spaces"""
     if tok.startswith("\\u"): return False
-    # if "\\n" in tok: return True
+    if tok == "\n": return True
     if tok == ", ": return True
     if tok == ",": return True
     if tok == " ,": return True
     if tok == ".": return True
     if tok == ". ": return True
     return str(tok).replace(" ", "").isalpha()
+
+def accept_tok(data: dict) -> str | None:
+    """return a token if acceptance is a match; otherwise None"""
+    pairs = [(k,v) for k,v in data.items()]    
+    if acceptance_criteria_1(pairs): return pairs[0][0]
+    # if acceptance_criteria_2(pairs): return 
+    return None
+
+def acceptance_criteria_1(pairs: List[Tuple[str, float]]):
+    if pairs[0][0] == "\n": return True
+
 
 if __name__ == "__main__":
     assert len(filter_non_alpha({"abc":1})) == 1

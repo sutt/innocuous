@@ -15,6 +15,7 @@ from stego.basic import (
 )
 from stego.utils import (
     filter_tok,
+    accept_tok,
 )
 from btc.addr_codec import (
     decode_bitcoin_address,
@@ -39,7 +40,8 @@ def main_encode(
 
     current_prompt = initial_prompt
     
-    for enc_int in enc_ints:
+    # for enc_int in enc_ints:
+    while len(enc_ints) != 0:
 
         toks = infer_llm(llm, prompt=current_prompt, num_output=num_logprobs)
 
@@ -49,9 +51,17 @@ def main_encode(
 
         logger.debug(f"filter non-alpha: {num_logprobs} -> {len(toks)}")
 
+        accepted_tok = accept_tok(toks)
+        if accepted_tok is not None:
+            current_prompt += accepted_tok
+            logger.debug(f"accept_tok hit: {repr(accepted_tok)} | continuing...")
+            continue
+
+        enc_int = enc_ints.pop(0)
+
         current_tok = list(toks.keys())[enc_int]
 
-        logger.debug(f"enc_int: {enc_int} | token: {current_tok}")
+        logger.debug(f"enc_int: {enc_int} | token: {repr(current_tok)}")
 
         current_prompt += current_tok
 
@@ -127,13 +137,22 @@ def main_decode(
 
 def example_random_msg():
     
-    # original_msg = bytes([19,17])
-    original_msg = bytes([random.randint(0,255) for e in range(20)])
+    original_msg = bytes([255,255])
+    # original_msg = bytes([0,0])
+    # original_msg = bytes([random.randint(0,255) for e in range(20)])
     logger.info(f"encoded_msg: {original_msg}")
 
-    chunk_size = 2
-    initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king" 
+    chunk_size = 3
     num_logprobs = 40
+    
+    # standard inital prompt
+    # initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king" 
+    
+    # high prob word: (" land" 0.91)
+    # initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, whose power and pride, were known through the"
+    
+    # punctuation is top token: ("\n" 0.3)
+    initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, whose power and pride, were known through the realms of earth to shine,"
 
     llm = init_llm()
     
@@ -144,9 +163,10 @@ def example_random_msg():
         chunk_size=chunk_size,
         num_logprobs=num_logprobs,
     )
-
-    # must re-init llm here of decode fails for some reason
+    print("done with encode...")
+    # must re-init llm here or decode fails for some reason
     llm = init_llm()
+    print("starting decode...")
     
     decoded_msg = main_decode(
         llm=llm, 
@@ -156,6 +176,7 @@ def example_random_msg():
         num_logprobs=num_logprobs,
     )
     
+    print(f"decoded_msg: {decoded_msg}")
     assert original_msg == decoded_msg
 
 
