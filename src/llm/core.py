@@ -16,7 +16,7 @@ PROMPT = "The capital of France is"
 @suppress_stderr
 def init_llm():
     return Llama(
-        model_path="../data/mistral-7b-instruct-v0.2.Q4_K_M.gguf", 
+        model_path="../../data/mistral-7b-instruct-v0.2.Q4_K_M.gguf", 
         logits_all=True,
     )
 
