@@ -1,0 +1,87 @@
+# Agro Configuration File
+#
+# This file allows you to customize the behavior of Agro.
+# Uncomment and modify the settings below to override the defaults.
+
+# --- General Paths ---
+
+# Directory for storing private project documentation and specifications.
+# AGDOCS_DIR: .agdocs
+
+# Directory for storing public project documentation.
+# PUBLIC_AGDOCS_DIR: .public-agdocs
+
+# Directory where git worktrees will be created.
+# WORKTREE_DIR: ./trees
+
+
+# --- Branching ---
+
+# Prefix for branches created for worktrees. E.g., 'tree/t1', 'tree/t2'.
+# WORKTREE_BRANCH_PREFIX: tree/t
+
+# Prefix for branches created when an agent outputs changes.
+# WORKTREE_OUTPUT_BRANCH_PREFIX: output/
+
+
+# --- Environment Replication (for containerized apps) ---
+
+# Base port for the API service in worktrees. Each worktree gets a unique port.
+# BASE_API_PORT: 8000
+
+# --- Python Environment ---
+
+# Commands to set up the Python environment in a new worktree.
+# For example, to install all optional dependency groups with uv:
+# ENV_SETUP_CMDS:
+#   - "uv venv"
+#   - "uv sync --quiet --all-extras"
+
+
+# --- Agent Execution ---
+
+# Default command to execute for 'agro exec'.
+EXEC_CMD_DEFAULT: maider.sh
+
+# The type of agent being used. Determines how built-in flags are passed.
+# Supported values: "aider", "claude", "gemini".
+# AGENT_TYPE: aider
+
+# Agent-specific configuration.
+# AGENT_CONFIG:
+#   aider:
+#     task_file_arg_template: ["-f", "{task_file}"]
+#     args: ["--yes", "--no-check-update", "--no-attribute-author", "--no-attribute-committer", "--no-attribute-co-authored-by"]
+#   claude:
+#     task_file_arg_template: null
+#     args: ["-d", "--allowedTools", "Write Edit MultiEdit", "--max-turns", "30", "-p"]
+#   gemini:
+#     task_file_arg_template: null
+#     args: ["-y"]
+
+# Agent-specific timeout settings in seconds.
+# A value of 0 means no timeout is applied, overriding any default.
+# AGENT_TIMEOUTS:
+#   aider: 0
+#   claude: 600
+#   gemini: 600
+
+# Default command to open spec files with 'agro task'.
+# AGRO_EDITOR_CMD: code
+
+
+# --- Muster ---
+
+# Default timeout in seconds for commands run with 'agro muster'.
+# A value of 0 or null means no timeout.
+# MUSTER_DEFAULT_TIMEOUT: 20
+
+# Pre-defined commands for 'agro muster -c'.
+# MUSTER_COMMON_CMDS:
+#   testq:
+#     cmd: "uv run pytest --tb=no -q"
+#   server-start:
+#     cmd: "uv run python app/main.py > server.log 2>&1 & echo $! > server.pid"
+#     timeout: null
+#   server-kill:
+#     cmd: "kill $(cat server.pid) && rm -f server.pid server.log"

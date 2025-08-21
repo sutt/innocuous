@@ -1,0 +1,1 @@
+in two.py create a class which saves and dumps the selection values so they can persist across sessions. prefer json for the serialization format. on script execution create new selection values only if the dump selection values don't exist, if they do exist, load them.
