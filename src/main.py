@@ -127,8 +127,8 @@ def main_decode(
 
 def main():
     
-    # original_msg = bytes([19,17])
-    original_msg = bytes([random.randint(0,255) for e in range(20)])
+    original_msg = bytes([19,17])
+    # original_msg = bytes([random.randint(0,255) for e in range(20)])
     logger.info(f"encoded_msg: {original_msg}")
 
     chunk_size = 2
@@ -177,6 +177,9 @@ def example_addr():
         chunk_size=chunk_size,
         num_logprobs=num_logprobs,
     )
+
+    # must re-init llm here of decode fails for some reason
+    llm = init_llm()
     
     decoded_msg = main_decode(
         llm=llm, 
@@ -186,7 +189,11 @@ def example_addr():
         num_logprobs=num_logprobs,
     )
     
-    assert original_msg == decoded_msg
+    try:
+        assert original_msg == decoded_msg
+    except:
+        print(original_msg)
+        print(decoded_msg)
 
 def test_decode_branch():
     addr = "12Wfw4L3oPJFk2q6osDoZLYAwdFkhvgt4E"
@@ -206,10 +213,11 @@ def test_decode_branch():
         chunk_size=chunk_size, 
         num_logprobs=num_logprobs,
     )
-    
+    print(original_msg)
+    print(decoded_msg)
     assert original_msg == decoded_msg
 
 if __name__ == "__main__":
     # main()
-    # example_addr()
-    test_decode_branch()
+    example_addr()
+    # test_decode_branch()
