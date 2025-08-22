@@ -12,6 +12,48 @@ We're using **Mistral-7b-instruct-Q4** as the underlying LLM.
 
 Running `python src/main.py` with `example_addr()` as the main function. 
 
+To view the full debugs check the log files in  [./docs/examples](./docs/examples/).
+
+##### `v2` 
+_8.22.25_
+
+**Params:**
+- `chunk_size=2`
+- `acceptance_thresh=0.7`
+
+>The king, whose power and pride, both fierce and wild,
+Ruled his vast kingdom through an iron will,
+No man dared cross his path without the guilt
+Of incurring his most bitter and deadly chill.
+He saw himself above God and men and land,
+As he, through conquest, made his realm expand
+Yet unbeknownst to him, this power so grand
+- note: we've removed double line carriages below
+
+**Params:**
+- `chunk_size=3`
+- `acceptance_thresh=0.7`
+
+>The king, a man of great repute,
+Sat on his throne of solid oak,
+A kingdom ripe in peace to keep,
+Yet threats did rise in shadows deep,
+>
+>What looming peril did this king
+Fear, and from what source did it spring.
+>
+>With quavering voice and furrowed brow,
+He pondered the impending now,
+For treachery or foreign war,
+Or both, the seeds of strife he sought,
+>
+>To face these dangers, brave and bold,
+He called for sword and armor cold
+
+
+##### `v1` 
+_8.21.25_
+
 ##### With `chunk_size=2` it produces the output:
 
 > The king, a man of noble grace, did dwell in state within a towr that loomed above all other loft, where eagles, soaring free in azured heights would cast, in envied sight, a winking glace at him who ruled, and in his hand a golden rod of rule he held alight, with sceptered power to rule and right, and with
