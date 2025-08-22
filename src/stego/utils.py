@@ -45,6 +45,23 @@ def acceptance_criteria_2(pairs: List[Tuple[str, float]], thresh=0.7) -> bool:
     if pairs[0][1] >= thresh: return True
     return False
     
+def pre_accept_filter(data: dict) -> dict:
+    """
+        before acceptance logic, allow common punctuation
+    """
+    return {
+        k:v for k,v in data.items()
+        if allowed_2(k)
+    }
+
+def post_accept_filter(data: dict) -> dict:
+    """
+        after acceptance logic, disallow all punctuation
+    """
+    return {
+        k:v for k,v in data.items()
+        if allowed_1(k)
+    }
 
 
 

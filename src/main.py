@@ -16,6 +16,8 @@ from stego.basic import (
 from stego.utils import (
     filter_tok,
     accept_tok,
+    pre_accept_filter,
+    post_accept_filter,
 )
 from btc.addr_codec import (
     decode_bitcoin_address,
@@ -40,7 +42,6 @@ def main_encode(
 
     current_prompt = initial_prompt
     
-    # for enc_int in enc_ints:
     while len(enc_ints) != 0:
 
         toks = infer_llm(llm, prompt=current_prompt, num_output=num_logprobs)
@@ -49,8 +50,8 @@ def main_encode(
         logger.debug(to_json(toks))
 
         toks = filter_tok(toks)
-
-        logger.debug(f"filter non-alpha: {num_logprobs} -> {len(toks)}")
+        toks = pre_accept_filter(toks)
+        logger.debug(f"pre_accept_filter: {num_logprobs} -> {len(toks)}")
 
         accepted_tok = accept_tok(toks)
         if accepted_tok is not None:
@@ -58,17 +59,19 @@ def main_encode(
             logger.debug(f"accept_tok hit: {repr(accepted_tok)} | continuing...")
             continue
 
+        _num_toks = len(toks)
+        toks = post_accept_filter(toks)
+        logger.debug(f"post_accept_filter: {_num_toks} -> {len(toks)}")
+
         enc_int = enc_ints.pop(0)
-
         current_tok = list(toks.keys())[enc_int]
-
         logger.debug(f"enc_int: {enc_int} | token: {repr(current_tok)}")
-
         current_prompt += current_tok
 
-    logger.info(f"final: {current_prompt}")
+    logger.debug(f"final: {current_prompt}")
 
     return current_prompt
+
 
 def main_decode(
     llm,
@@ -187,6 +190,11 @@ def example_random_msg():
         chunk_size=chunk_size,
         num_logprobs=num_logprobs,
     )
+    print("\n### repr: encoded_prompt:")
+    print(repr(encoded_prompt)[1:-1])
+    
+    print("\n### encoded_prompt:")
+    print(encoded_prompt)
     
     # must re-init llm here or decode fails for some reason
     # IMPORTANT: this can trigger OOM silent fail, in which case decode
@@ -206,5 +214,39 @@ def example_random_msg():
     print("\ndone. it worked!")
 
 
+def example_decode_test():
+    
+    # params -----
+    addr = "12Wfw4L3oPJFk2q6osDoZLYAwdFkhvgt4E"
+    info = decode_bitcoin_address(addr)
+    original_msg = bytes.fromhex(info["payload_hex"])
+    
+    logger.info(f"encoded_msg: {original_msg}")
+
+    chunk_size = 2
+    num_logprobs = 40
+    
+    initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king" 
+    #TODO
+    encoded_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king sat high upon his throne so grand,\nWith scepter in his hand, a look so bold,\nThe room did tremble in awe and stand,\nIn hushed reverence the tales were told,\nOf valor deeds and deeds of old so gold.\n\nBut as the sun began to wane away,\nHis subjects pleaded for their daily bread,\nHe sighed with weary heart and cast his gaze,\nUpon his treasurer who knelt to stay,\nTo share the news with him that he had read.\n\nThe treasures were depleted, gold had gone,\nNo more for"
+
+
+    # main functions ----
+    llm = init_llm()
+    
+    decoded_msg = main_decode(
+        llm=llm, 
+        encoded_prompt=encoded_prompt, 
+        initial_prompt=initial_prompt, 
+        chunk_size=chunk_size, 
+        num_logprobs=num_logprobs,
+    )
+    
+    print(f"decoded_msg: {decoded_msg}")
+    assert original_msg == decoded_msg
+    print("\ndone. it worked!")
+
+
 if __name__ == "__main__":
-    example_random_msg()
+    # example_random_msg()
+    example_decode_test()

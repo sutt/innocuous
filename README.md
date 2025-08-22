@@ -28,7 +28,7 @@ Of incurring his most bitter and deadly chill.
 He saw himself above God and men and land,
 As he, through conquest, made his realm expand
 Yet unbeknownst to him, this power so grand
-- note: we've removed double line carriages below
+
 
 **Params:**
 - `chunk_size=3`
