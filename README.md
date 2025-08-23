@@ -14,6 +14,50 @@ Running `python src/main.py` with `example_addr()` as the main function.
 
 To view the full debugs check the log files in  [./docs/examples](./docs/examples/).
 
+##### `v3` 
+_8.23.25_
+
+Punctuation is still allowed but no longer an encoding element. So poems are now longer.
+
+For all examples below `acceptance_thresh=0.7`.
+
+##### chunk_size: 2
+> The king sat high upon his throne so grand,  
+> With scepter in his hand, a look so bold,  
+> The room did tremble in awe and stand,  
+> In hushed reverence the tales were told,  
+> Of valor deeds and deeds of old so gold.  
+>  
+> But as the sun began to wane away,  
+> His subjects pleaded for their daily bread,  
+> He sighed with weary heart and cast his gaze,  
+> Upon his treasurer who knelt to stay,  
+> To share the news with him that he had read.  
+>  
+> The treasures were depleted, gold had gone,  
+> No more for  
+
+##### chunk_size: 3
+> The king sat in his golden chair,  
+> A scepter in his hand,  
+> A queen stood next by his side,  
+> Her beauty shone far and wide,  
+> And all around their castle stoodThe noblemen whose lives did hinge  
+> Awaiting his decrees of war Or peace that day with hope did sing  
+> What word shall end this royal verse  
+> And grant my pen its rightful due  
+
+
+##### chunk_size: 4
+> The king with regal demeanor strode,  
+> To face in fierce encounter this foe,  
+> Where lies the heart and might and bold,  
+> He challenged ere the first star threw low,  
+>  
+> His foe a savage warrior wailed,  
+> And brandished arms that held no shield,  
+> But  
+
 ##### `v2` 
 _8.22.25_
 
@@ -21,34 +65,34 @@ _8.22.25_
 - `chunk_size=2`
 - `acceptance_thresh=0.7`
 
->The king, whose power and pride, both fierce and wild,
-Ruled his vast kingdom through an iron will,
-No man dared cross his path without the guilt
-Of incurring his most bitter and deadly chill.
-He saw himself above God and men and land,
-As he, through conquest, made his realm expand
-Yet unbeknownst to him, this power so grand
+>The king, whose power and pride, both fierce and wild,  
+Ruled his vast kingdom through an iron will,  
+No man dared cross his path without the guilt  
+Of incurring his most bitter and deadly chill.  
+He saw himself above God and men and land,  
+As he, through conquest, made his realm expand  
+Yet unbeknownst to him, this power so grand  
 
 
 **Params:**
 - `chunk_size=3`
 - `acceptance_thresh=0.7`
 
->The king, a man of great repute,
-Sat on his throne of solid oak,
-A kingdom ripe in peace to keep,
-Yet threats did rise in shadows deep,
+>The king, a man of great repute,  
+Sat on his throne of solid oak,  
+A kingdom ripe in peace to keep,  
+Yet threats did rise in shadows deep,  
 >
->What looming peril did this king
-Fear, and from what source did it spring.
+>What looming peril did this king  
+Fear, and from what source did it spring.  
 >
->With quavering voice and furrowed brow,
-He pondered the impending now,
-For treachery or foreign war,
-Or both, the seeds of strife he sought,
->
->To face these dangers, brave and bold,
-He called for sword and armor cold
+>With quavering voice and furrowed brow,  
+He pondered the impending now,  
+For treachery or foreign war,  
+Or both, the seeds of strife he sought,  
+>  
+>To face these dangers, brave and bold,  
+He called for sword and armor cold  
 
 
 ##### `v1` 
