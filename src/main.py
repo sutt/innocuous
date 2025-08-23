@@ -1,27 +1,13 @@
+"""
+Updated main.py - Now uses the new package structure.
+For better organization, consider using the examples/ modules instead.
+"""
+
 import logging
 import random
-from llm.core import demo
-from llm.core import (
-    init_llm,
-    infer_llm,
-)
-from llm.utils import (
-    cvt_to_logprobs,
-    to_json,
-)
-from stego.basic import (
-    encode,
-    decode,
-)
-from stego.utils import (
-    filter_tok,
-    accept_tok,
-    pre_accept_filter,
-    post_accept_filter,
-)
-from btc.addr_codec import (
-    decode_bitcoin_address,
-)
+from core import main_encode, main_decode
+from llm import create_llm_client
+from crypto import decode_bitcoin_address
 
 
 DEBUG = True
@@ -169,11 +155,10 @@ def main_decode(
 
 
 def example_random_msg():
+    """Example function using the new package structure."""
     
     # params -----
-    # original_msg = bytes([255,255])
-    # original_msg = bytes([0,0])
-    original_msg = bytes([random.randint(0,255) for e in range(20)])
+    original_msg = bytes([random.randint(0, 255) for _ in range(20)])
     
     addr = "12Wfw4L3oPJFk2q6osDoZLYAwdFkhvgt4E"
     info = decode_bitcoin_address(addr)
@@ -184,7 +169,7 @@ def example_random_msg():
     chunk_size = 2
     num_logprobs = 40
     
-    # standard inital prompt
+    # standard initial prompt
     initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king" 
     
     # high prob word: (" land" 0.91)
@@ -193,10 +178,9 @@ def example_random_msg():
     # punctuation is top token: ("\n" 0.3)
     # initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king, whose power and pride, were known through the realms of earth to shine,"
 
-
     # main functions ----
     
-    llm = init_llm()
+    llm = create_llm_client()
     
     encoded_prompt = main_encode(
         llm=llm,
@@ -213,8 +197,8 @@ def example_random_msg():
     
     # must re-init llm here or decode fails for some reason
     # IMPORTANT: this can trigger OOM silent fail, in which case decode
-    # and verify message match never runs and program exits as if succesful.
-    llm = init_llm()
+    # and verify message match never runs and program exits as if successful.
+    llm = create_llm_client()
     
     decoded_msg = main_decode(
         llm=llm, 
