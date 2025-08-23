@@ -94,6 +94,7 @@ def main_decode(
         toks = infer_llm(llm, prompt=current_prompt, num_output=num_logprobs)
         toks = cvt_to_logprobs(toks)
         toks = filter_tok(toks)
+        toks = pre_accept_filter(toks)
 
         accepted_tok = accept_tok(toks)
         if accepted_tok is not None:
@@ -108,6 +109,7 @@ def main_decode(
                 memo[state] = None
                 return None
 
+        toks = post_accept_filter(toks)
         possible_matches = []
         
         num_candidate_toks = 2**chunk_size
