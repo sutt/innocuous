@@ -1,5 +1,5 @@
 import logging
-from llm import to_json
+from stego_llm.llm import to_json
 
 
 logger = logging.getLogger(__name__)

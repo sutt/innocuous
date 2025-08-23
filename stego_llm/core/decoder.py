@@ -1,11 +1,11 @@
 import logging
-from steganography import (
+from stego_llm.steganography import (
     chunks_to_message,
     find_acceptable_token,
     pre_selection_filter,
     post_selection_filter,
 )
-from llm import get_token_probabilities, logits_to_probabilities
+from stego_llm.llm import get_token_probabilities, logits_to_probabilities
 from .trace import _trace_decoding_step
 
 

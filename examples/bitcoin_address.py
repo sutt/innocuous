@@ -1,7 +1,11 @@
 import logging
-import random
-from ..core import main_encode, main_decode
-from ..llm import create_llm_client
+from stego_llm import main_encode, main_decode
+from stego_llm.llm import create_llm_client
+from stego_llm.crypto import decode_bitcoin_address
+
+import psutil    #TMP-DEBUG
+import os   #TMP-DEBUG
+process = psutil.Process(os.getpid())  #TMP-DEBUG
 
 
 DEBUG = True
@@ -10,11 +14,13 @@ log_level = logging.DEBUG if DEBUG else logging.INFO
 logging.basicConfig(level=log_level, format="")
 
 
-def example_random_data():
-    """Example encoding/decoding random byte data."""
+def example_bitcoin_address():
+    """Example encoding/decoding a Bitcoin address."""
     
     # Parameters
-    original_msg = bytes([random.randint(0, 255) for _ in range(20)])
+    addr = "12Wfw4L3oPJFk2q6osDoZLYAwdFkhvgt4E"
+    info = decode_bitcoin_address(addr)
+    original_msg = bytes.fromhex(info["payload_hex"])
     
     logger.info(f"encoded_msg: {original_msg}")
 
@@ -44,7 +50,9 @@ def example_random_data():
     # Must re-init llm here or decode fails for some reason
     # IMPORTANT: this can trigger OOM silent fail, in which case decode
     # and verify message match never runs and program exits as if successful.
+    print(f"Memory before decode init: {process.memory_info().rss / 1024 / 1024:.1f} MB")  #TMP-DEBUG
     llm = create_llm_client()
+    print(f"Memory after decode init: {process.memory_info().rss / 1024 / 1024:.1f} MB")   #TMP-DEBUG
     
     decoded_msg = main_decode(
         llm=llm, 
@@ -54,10 +62,11 @@ def example_random_data():
         num_logprobs=num_logprobs,
     )
     
+    print(f"Memory after decode: {process.memory_info().rss / 1024 / 1024:.1f} MB")     #TMP-DEBUG
     print(f"decoded_msg: {decoded_msg}")
     assert original_msg == decoded_msg
     print("\ndone. it worked!")
 
 
 if __name__ == "__main__":
-    example_random_data()
+    example_bitcoin_address()
