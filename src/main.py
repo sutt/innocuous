@@ -30,6 +30,24 @@ log_level = logging.DEBUG if DEBUG else logging.INFO
 logging.basicConfig(level=log_level, format="")
 
 
+def _trace_encoding_step(step_name, **kwargs):
+    """Single trace function for all encoding steps"""
+    if not logger.isEnabledFor(logging.DEBUG):
+        return
+    
+    trace_messages = {
+        'tokens_processed': lambda: f"tokens: {to_json(kwargs['toks'])}",
+        'pre_filter': lambda: f"pre_accept_filter: {kwargs['before']} -> {kwargs['after']}",
+        'token_accepted': lambda: f"accept_tok hit: {repr(kwargs['token'])} | continuing...",
+        'post_filter': lambda: f"post_accept_filter: {kwargs['before']} -> {kwargs['after']}",
+        'token_selected': lambda: f"enc_int: {kwargs['enc_int']} | token: {repr(kwargs['token'])}",
+        'encoding_complete': lambda: f"final: {kwargs['prompt']}"
+    }
+    
+    if step_name in trace_messages:
+        logger.debug(trace_messages[step_name]())
+
+
 def main_encode(
     llm, 
     initial_prompt, 
@@ -39,37 +57,33 @@ def main_encode(
     ):
     
     enc_ints = encode(msg, chunk_size=chunk_size)
-
     current_prompt = initial_prompt
     
     while len(enc_ints) != 0:
-
         toks = infer_llm(llm, prompt=current_prompt, num_output=num_logprobs)
-
         toks = cvt_to_logprobs(toks)
-        logger.debug(to_json(toks))
+        _trace_encoding_step('tokens_processed', toks=toks)
 
         toks = filter_tok(toks)
         toks = pre_accept_filter(toks)
-        logger.debug(f"pre_accept_filter: {num_logprobs} -> {len(toks)}")
+        _trace_encoding_step('pre_filter', before=num_logprobs, after=len(toks))
 
         accepted_tok = accept_tok(toks)
         if accepted_tok is not None:
+            _trace_encoding_step('token_accepted', token=accepted_tok)
             current_prompt += accepted_tok
-            logger.debug(f"accept_tok hit: {repr(accepted_tok)} | continuing...")
             continue
 
         _num_toks = len(toks)
         toks = post_accept_filter(toks)
-        logger.debug(f"post_accept_filter: {_num_toks} -> {len(toks)}")
+        _trace_encoding_step('post_filter', before=_num_toks, after=len(toks))
 
         enc_int = enc_ints.pop(0)
         current_tok = list(toks.keys())[enc_int]
-        logger.debug(f"enc_int: {enc_int} | token: {repr(current_tok)}")
+        _trace_encoding_step('token_selected', enc_int=enc_int, token=current_tok)
         current_prompt += current_tok
 
-    logger.debug(f"final: {current_prompt}")
-
+    _trace_encoding_step('encoding_complete', prompt=current_prompt)
     return current_prompt
 
 
