@@ -1,7 +1,7 @@
 import logging
 import random
-from ..core import main_encode, main_decode
-from ..llm import create_llm_client
+from stego_llm import main_encode, main_decode
+from stego_llm.llm import create_llm_client
 
 
 DEBUG = True

@@ -1,12 +1,20 @@
 [project]
-name = "demo-llama"
+name = "stego-llm"
 version = "0.1.0"
-description = "Add your description here"
+description = "LLM Steganography - Embed and extract hidden messages in LLM-generated text"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "llama-cpp-python>=0.3.16",
+    "numpy",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["stego_llm"]
 
 [dependency-groups]
 dev = [

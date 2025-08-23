@@ -1,7 +1,7 @@
 import logging
-from ..core import main_encode, main_decode
-from ..llm import create_llm_client
-from ..crypto import decode_bitcoin_address
+import random
+from stego_llm import main_encode, main_decode
+from stego_llm.llm import create_llm_client
 
 
 DEBUG = True
@@ -10,13 +10,11 @@ log_level = logging.DEBUG if DEBUG else logging.INFO
 logging.basicConfig(level=log_level, format="")
 
 
-def example_bitcoin_address():
-    """Example encoding/decoding a Bitcoin address."""
+def example_random_data():
+    """Example encoding/decoding random byte data."""
     
     # Parameters
-    addr = "12Wfw4L3oPJFk2q6osDoZLYAwdFkhvgt4E"
-    info = decode_bitcoin_address(addr)
-    original_msg = bytes.fromhex(info["payload_hex"])
+    original_msg = bytes([random.randint(0, 255) for _ in range(20)])
     
     logger.info(f"encoded_msg: {original_msg}")
 
@@ -62,4 +60,4 @@ def example_bitcoin_address():
 
 
 if __name__ == "__main__":
-    example_bitcoin_address()
+    example_random_data()
