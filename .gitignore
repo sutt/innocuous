@@ -8,6 +8,9 @@ wheels/
 src/*.egg-info
 .ipynb_checkpoints
 
+# workspace ignores
+scratch
+
 # Agro project directory
 .agdocs/
 
