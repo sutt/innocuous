@@ -1,7 +1,6 @@
 import logging
 from stego_llm.steganography import (
     message_to_chunks,
-    filter_tokens,
     find_acceptable_token,
     pre_selection_filter,
     post_selection_filter,
@@ -29,7 +28,6 @@ def main_encode(
         toks = logits_to_probabilities(toks)
         _trace_encoding_step('tokens_processed', toks=toks)
 
-        toks = filter_tokens(toks)
         toks = pre_selection_filter(toks)
         _trace_encoding_step('pre_filter', before=num_logprobs, after=len(toks))
 

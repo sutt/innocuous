@@ -34,6 +34,7 @@ def get_token_probabilities(
 
 def demo():
     """Demo function showing basic LLM usage."""
+    # TODO - add this cli status check command
     llm = create_llm_client()
     top_logprobs = get_token_probabilities(llm)
     top_logprobs = logits_to_probabilities(top_logprobs)

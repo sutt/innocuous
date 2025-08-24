@@ -1,22 +1,6 @@
 from typing import List, Tuple, Dict, Optional
 
 
-def filter_non_alpha(data: Dict) -> Dict:
-    """Filter dictionary to only alpha tokens with spaces."""
-    return {
-        k: v for k, v in data.items()
-        if str(k).replace(" ", "").isalpha()
-    }
-
-
-def filter_tokens(data: Dict) -> Dict:
-    """Filter tokens using text-based criteria."""
-    return {
-        k: v for k, v in data.items()
-        if is_text_token(k)
-    }
-
-
 def is_alpha_only(tok: str) -> bool:
     """Check if token contains only alphabetic characters and spaces."""
     return str(tok).replace(" ", "").isalpha()
@@ -46,6 +30,7 @@ def find_acceptable_token(data: Dict) -> Optional[str]:
 def _acceptance_criteria_newline(pairs: List[Tuple[str, float]]) -> bool:
     """Accept if top token is a newline."""
     return pairs[0][0] == "\n"
+    
 
 
 def _acceptance_criteria_threshold(pairs: List[Tuple[str, float]], thresh: float = 0.7) -> bool:
