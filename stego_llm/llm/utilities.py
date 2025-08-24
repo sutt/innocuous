@@ -5,7 +5,6 @@ import io
 import ctypes
 from contextlib import redirect_stderr
 from llama_cpp import llama_log_set
-from collections import OrderedDict
 from typing import Dict
 
 
