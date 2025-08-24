@@ -8,6 +8,7 @@ from typing import Tuple, Dict, Any, Optional
 _B58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 _B58_IDX = {c: i for i, c in enumerate(_B58_ALPHABET)}
 
+
 def b58encode(b: bytes) -> str:
     # Count leading zeros
     n_zeros = len(b) - len(b.lstrip(b"\0"))
@@ -17,6 +18,7 @@ def b58encode(b: bytes) -> str:
         num, rem = divmod(num, 58)
         out = _B58_ALPHABET[rem] + out
     return "1" * n_zeros + out
+
 
 def b58decode(s: str) -> bytes:
     if not s:
@@ -32,14 +34,18 @@ def b58decode(s: str) -> bytes:
     n_zeros = len(s) - len(s.lstrip("1"))
     return b"\0" * n_zeros + full
 
+
 def _double_sha256(b: bytes) -> bytes:
     import hashlib
+
     return hashlib.sha256(hashlib.sha256(b).digest()).digest()
+
 
 def base58check_encode(version: bytes, payload: bytes) -> str:
     body = version + payload
     checksum = _double_sha256(body)[:4]
     return b58encode(body + checksum)
+
 
 def base58check_decode(s: str) -> Tuple[bytes, bytes]:
     raw = b58decode(s)
@@ -56,22 +62,26 @@ def base58check_decode(s: str) -> Tuple[bytes, bytes]:
 _BECH32_CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
 _BECH32_MAP = {c: i for i, c in enumerate(_BECH32_CHARSET)}
 
+
 def _bech32_hrp_expand(hrp: str):
     return [ord(x) >> 5 for x in hrp] + [0] + [ord(x) & 31 for x in hrp]
 
+
 def _bech32_polymod(values) -> int:
-    GEN = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3]
+    GEN = [0x3B6A57B2, 0x26508E6D, 0x1EA119FA, 0x3D4233DD, 0x2A1462B3]
     chk = 1
     for v in values:
         b = chk >> 25
-        chk = ((chk & 0x1ffffff) << 5) ^ v
+        chk = ((chk & 0x1FFFFFF) << 5) ^ v
         for i in range(5):
             chk ^= GEN[i] if ((b >> i) & 1) else 0
     return chk
 
+
 # Constants: BIP-173 (bech32) and BIP-350 (bech32m)
-_CONST_BECH32  = 1
-_CONST_BECH32M = 0x2bc830a3
+_CONST_BECH32 = 1
+_CONST_BECH32M = 0x2BC830A3
+
 
 def _bech32_verify_checksum(hrp: str, data) -> str:
     pm = _bech32_polymod(_bech32_hrp_expand(hrp) + data)
@@ -81,10 +91,12 @@ def _bech32_verify_checksum(hrp: str, data) -> str:
         return "bech32m"
     raise ValueError("Bech32: bad checksum")
 
+
 def _bech32_create_checksum(hrp: str, data, spec: str):
     const = _CONST_BECH32 if spec == "bech32" else _CONST_BECH32M
-    pm = _bech32_polymod(_bech32_hrp_expand(hrp) + data + [0]*6) ^ const
-    return [(pm >> 5*(5-i)) & 31 for i in range(6)]
+    pm = _bech32_polymod(_bech32_hrp_expand(hrp) + data + [0] * 6) ^ const
+    return [(pm >> 5 * (5 - i)) & 31 for i in range(6)]
+
 
 def bech32_decode(addr: str) -> Tuple[str, list, str]:
     if any(ord(x) < 33 or ord(x) > 126 for x in addr):
@@ -92,11 +104,15 @@ def bech32_decode(addr: str) -> Tuple[str, list, str]:
     if addr.lower() != addr and addr.upper() != addr:
         raise ValueError("Bech32: mixed case")
     addr = addr.lower()
-    if ("1" not in addr) or (addr.rfind("1") == 0) or (addr.rfind("1") == len(addr)-1):
+    if (
+        ("1" not in addr)
+        or (addr.rfind("1") == 0)
+        or (addr.rfind("1") == len(addr) - 1)
+    ):
         raise ValueError("Bech32: invalid separator position")
     pos = addr.rfind("1")
     hrp = addr[:pos]
-    data_part = addr[pos+1:]
+    data_part = addr[pos + 1 :]
     data = []
     for c in data_part:
         if c not in _BECH32_MAP:
@@ -107,11 +123,13 @@ def bech32_decode(addr: str) -> Tuple[str, list, str]:
     spec = _bech32_verify_checksum(hrp, data)
     return hrp, data[:-6], spec
 
+
 def bech32_encode(hrp: str, data: list, spec: str) -> str:
     if spec not in ("bech32", "bech32m"):
         raise ValueError("spec must be 'bech32' or 'bech32m'")
     combined = data + _bech32_create_checksum(hrp, data, spec)
     return hrp + "1" + "".join(_BECH32_CHARSET[d] for d in combined)
+
 
 def convertbits(data: bytes, from_bits: int, to_bits: int, pad: bool) -> Optional[list]:
     # General power-of-2 base conversion (e.g., 8->5 or 5->8)
@@ -134,6 +152,7 @@ def convertbits(data: bytes, from_bits: int, to_bits: int, pad: bool) -> Optiona
         return None
     return ret
 
+
 # ---------------- High-level address encode/decode ----------------
 
 # Known version bytes (Base58Check)
@@ -144,14 +163,18 @@ _VERSION_MAP = {
     0xC4: ("testnet", "p2sh"),
 }
 
+
 def _infer_segwit_type(wver: int, program: bytes) -> str:
     if wver == 0:
-        if len(program) == 20: return "p2wpkh"
-        if len(program) == 32: return "p2wsh"
+        if len(program) == 20:
+            return "p2wpkh"
+        if len(program) == 32:
+            return "p2wsh"
         return "witness_v0"
     if wver == 1 and len(program) == 32:
         return "p2tr"  # Taproot
     return f"witness_v{wver}"
+
 
 def decode_bitcoin_address(addr: str) -> Dict[str, Any]:
     """
@@ -173,7 +196,7 @@ def decode_bitcoin_address(addr: str) -> Dict[str, Any]:
             "network": network,
             "type": a_type,
             "version_byte": v_int,
-            "payload": payload,           # typically 20 bytes (hash160)
+            "payload": payload,  # typically 20 bytes (hash160)
             "payload_hex": payload.hex(),
         }
     except Exception:
@@ -208,6 +231,7 @@ def decode_bitcoin_address(addr: str) -> Dict[str, Any]:
         "type": _infer_segwit_type(wver, program),
     }
 
+
 def encode_base58_address(version_byte: int, payload: bytes) -> str:
     """
     Encode (version_byte + payload) with Base58Check.
@@ -216,6 +240,7 @@ def encode_base58_address(version_byte: int, payload: bytes) -> str:
     if not (0 <= version_byte <= 255):
         raise ValueError("version_byte must be 0..255")
     return base58check_encode(bytes([version_byte]), payload)
+
 
 def encode_segwit_address(hrp: str, witness_version: int, program: bytes) -> str:
     """
@@ -235,20 +260,26 @@ def encode_segwit_address(hrp: str, witness_version: int, program: bytes) -> str
 
 # ---------------- Convenience helpers ----------------
 
+
 def describe(addr: str) -> str:
     """Pretty string description."""
     info = decode_bitcoin_address(addr)
     if info["format"] == "base58":
-        return (f"{addr}\n"
-                f"  Format: Base58Check ({info['type']}, {info['network']})\n"
-                f"  Version: 0x{info['version_byte']:02x}\n"
-                f"  Payload ({len(info['payload'])} bytes): {info['payload_hex']}")
+        return (
+            f"{addr}\n"
+            f"  Format: Base58Check ({info['type']}, {info['network']})\n"
+            f"  Version: 0x{info['version_byte']:02x}\n"
+            f"  Payload ({len(info['payload'])} bytes): {info['payload_hex']}"
+        )
     else:
-        return (f"{addr}\n"
-                f"  Format: Bech32 ({info['spec']})\n"
-                f"  Network HRP: {info['network']}\n"
-                f"  Witness v{info['witness_version']} ({info['type']})\n"
-                f"  Program ({len(info['program'])} bytes): {info['program_hex']}")
+        return (
+            f"{addr}\n"
+            f"  Format: Bech32 ({info['spec']})\n"
+            f"  Network HRP: {info['network']}\n"
+            f"  Witness v{info['witness_version']} ({info['type']})\n"
+            f"  Program ({len(info['program'])} bytes): {info['program_hex']}"
+        )
+
 
 if __name__ == "__main__":
     # print(describe("1BoatSLRHtKNngkdXEeobR76b53LETtpyT"))      # P2PKH mainnet

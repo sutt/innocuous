@@ -15,12 +15,14 @@ llama_log_obj = []
 
 def suppress_stderr(func):
     """Decorator to suppress stderr output from function calls."""
+
     def wrapper(*args, **kwargs):
         capture_stderr = io.StringIO()
         with redirect_stderr(capture_stderr):
             result = func(*args, **kwargs)
             llama_log_obj.append(capture_stderr.getvalue())
         return result
+
     return wrapper
 
 
@@ -29,13 +31,15 @@ def my_log_callback(level, message, user_data):
     llama_log_obj.append(message.decode())
 
 
-log_callback = ctypes.CFUNCTYPE(None, ctypes.c_int,
-                                ctypes.c_char_p, ctypes.c_void_p)(my_log_callback)
+log_callback = ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.c_char_p, ctypes.c_void_p)(
+    my_log_callback
+)
 
 llama_log_set(log_callback, ctypes.c_void_p())
 
 
 # LLM helpers ------
+
 
 def to_json(data: Dict) -> str:
     """Convert dictionary to formatted JSON string."""
@@ -58,8 +62,9 @@ def sum_probs(logprobs: Dict) -> float:
 
 
 if __name__ == "__main__":
+
     def demo_tojson():
-        d = {'hello': np.float32(1.23), 'world': np.float32(-0.999999)}
+        d = {"hello": np.float32(1.23), "world": np.float32(-0.999999)}
         print(to_json(d))
-    
+
     demo_tojson()
