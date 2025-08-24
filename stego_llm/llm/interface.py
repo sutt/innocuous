@@ -6,7 +6,7 @@ from .utilities import suppress_stderr, logits_to_probabilities, to_json
 
 @suppress_stderr
 def create_llm_client(
-    model_path="/home/user/dev/innocuous/data/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
+    model_path="/home/user/dev/innocuous/data/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
 ):
     """Initialize and return a Llama LLM client."""
     return Llama(
@@ -16,11 +16,7 @@ def create_llm_client(
 
 
 @suppress_stderr
-def get_token_probabilities(
-    llm,
-    prompt,
-    num_output=10
-):
+def get_token_probabilities(llm, prompt, num_output=10):
     """Get top token probabilities from the LLM for the given prompt."""
     output = llm(
         prompt,
@@ -28,7 +24,7 @@ def get_token_probabilities(
         logprobs=num_output,
         echo=False,
     )
-    top_logprobs = output['choices'][0]['logprobs']['top_logprobs'][0]
+    top_logprobs = output["choices"][0]["logprobs"]["top_logprobs"][0]
     return top_logprobs
 
 
