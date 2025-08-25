@@ -25,3 +25,6 @@ dev = [
     "pytest>=8.4.1",
     "pytest-mock",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
