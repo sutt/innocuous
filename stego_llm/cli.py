@@ -48,14 +48,17 @@ def main():
         log_level = logging.DEBUG
     logging.basicConfig(level=log_level, stream=sys.stderr)
 
-    initial_prompt = "you are a helpful assistant."
+    initial_prompt = None
     if args.initial_prompt_text:
         initial_prompt = args.initial_prompt_text
     elif args.initial_prompt_file:
         initial_prompt = args.initial_prompt_file.read_text()
 
-    # Hardcoded for now, as per file summaries
+    # Hardcoded for now
     num_logprobs = 100
+    if initial_prompt is None:
+        initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king"
+
 
     if args.command == "encode":
         message_bytes = b""
