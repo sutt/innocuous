@@ -21,7 +21,9 @@ def test_encode_text(mocker):
 
 def test_encode_bytes(mocker):
     """Test encode command with --bytes."""
-    mocker.patch("sys.argv", ["innocuous", "encode", "--bytes", "68656c6c6f"])  # "hello" in hex
+    mocker.patch(
+        "sys.argv", ["innocuous", "encode", "--bytes", "68656c6c6f"]
+    )  # "hello" in hex
     mock_main_encode = mocker.patch("stego_llm.cli.main_encode", return_value="encoded")
     mocker.patch("stego_llm.cli.create_llm_client")
     mocker.patch("builtins.print")
@@ -48,8 +50,12 @@ def test_encode_btc_addr(mocker):
 
 def test_decode_message(mocker):
     """Test decode command with --message."""
-    mocker.patch("sys.argv", ["innocuous", "decode", "--message", "some encoded message"])
-    mock_main_decode = mocker.patch("stego_llm.cli.main_decode", return_value=b"decoded")
+    mocker.patch(
+        "sys.argv", ["innocuous", "decode", "--message", "some encoded message"]
+    )
+    mock_main_decode = mocker.patch(
+        "stego_llm.cli.main_decode", return_value=b"decoded"
+    )
     mocker.patch("stego_llm.cli.create_llm_client")
     mocker.patch("builtins.print")
 
@@ -64,7 +70,9 @@ def test_decode_file(mocker, tmp_path):
     p = tmp_path / "message.txt"
     p.write_text("file encoded message")
     mocker.patch("sys.argv", ["innocuous", "decode", "--file", str(p)])
-    mock_main_decode = mocker.patch("stego_llm.cli.main_decode", return_value=b"decoded")
+    mock_main_decode = mocker.patch(
+        "stego_llm.cli.main_decode", return_value=b"decoded"
+    )
     mocker.patch("stego_llm.cli.create_llm_client")
     mocker.patch("builtins.print")
 
@@ -76,7 +84,10 @@ def test_decode_file(mocker, tmp_path):
 
 def test_initial_prompt_text(mocker):
     """Test --initial-prompt-text flag."""
-    mocker.patch("sys.argv", ["innocuous", "--initial-prompt-text", "my prompt", "encode", "--text", "t"])
+    mocker.patch(
+        "sys.argv",
+        ["innocuous", "--initial-prompt-text", "my prompt", "encode", "--text", "t"],
+    )
     mock_main_encode = mocker.patch("stego_llm.cli.main_encode")
     mocker.patch("stego_llm.cli.create_llm_client")
     mocker.patch("builtins.print")
@@ -91,7 +102,10 @@ def test_initial_prompt_file(mocker, tmp_path):
     """Test --initial-prompt-file flag."""
     p = tmp_path / "prompt.txt"
     p.write_text("prompt from file")
-    mocker.patch("sys.argv", ["innocuous", "--initial-prompt-file", str(p), "encode", "--text", "t"])
+    mocker.patch(
+        "sys.argv",
+        ["innocuous", "--initial-prompt-file", str(p), "encode", "--text", "t"],
+    )
     mock_main_encode = mocker.patch("stego_llm.cli.main_encode")
     mocker.patch("stego_llm.cli.create_llm_client")
     mocker.patch("builtins.print")
@@ -104,7 +118,9 @@ def test_initial_prompt_file(mocker, tmp_path):
 
 def test_chunk_size(mocker):
     """Test --chunk_size flag."""
-    mocker.patch("sys.argv", ["innocuous", "--chunk_size", "4", "encode", "--text", "t"])
+    mocker.patch(
+        "sys.argv", ["innocuous", "--chunk_size", "4", "encode", "--text", "t"]
+    )
     mock_main_encode = mocker.patch("stego_llm.cli.main_encode")
     mocker.patch("stego_llm.cli.create_llm_client")
     mocker.patch("builtins.print")

@@ -15,7 +15,9 @@ def main():
     parser.add_argument(
         "-v", "--verbose", action="count", default=0, help="Increase verbosity"
     )
-    parser.add_argument("--chunk_size", type=int, default=3, help="Chunk size for encoding/decoding")
+    parser.add_argument(
+        "--chunk_size", type=int, default=3, help="Chunk size for encoding/decoding"
+    )
     prompt_group = parser.add_mutually_exclusive_group()
     prompt_group.add_argument(
         "--initial-prompt-text", type=str, help="Initial prompt text"
@@ -37,7 +39,9 @@ def main():
     decode_parser = subparsers.add_parser("decode", help="Decode a message")
     decode_group = decode_parser.add_mutually_exclusive_group(required=True)
     decode_group.add_argument("--message", type=str, help="Message to decode")
-    decode_group.add_argument("--file", type=Path, help="Path to file with message to decode")
+    decode_group.add_argument(
+        "--file", type=Path, help="Path to file with message to decode"
+    )
 
     args = parser.parse_args()
 
@@ -58,7 +62,6 @@ def main():
     num_logprobs = 100
     if initial_prompt is None:
         initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king"
-
 
     if args.command == "encode":
         message_bytes = b""
