@@ -1,1 +1,0 @@
-in two.py convert the decimal and random operations to numpy
