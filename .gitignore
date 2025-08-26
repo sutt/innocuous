@@ -10,6 +10,7 @@ src/*.egg-info
 
 # workspace ignores
 scratch
+.env
 
 # Agro project directory
 .agdocs/
