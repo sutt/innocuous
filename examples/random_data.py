@@ -1,7 +1,6 @@
 import logging
 import random
 from stego_llm import main_encode, main_decode
-from stego_llm.llm import create_llm_client
 
 
 DEBUG = True
@@ -25,10 +24,7 @@ def example_random_data():
     initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king"
 
     # Main functions
-    llm = create_llm_client()
-
     encoded_prompt = main_encode(
-        llm=llm,
         initial_prompt=initial_prompt,
         msg=original_msg,
         chunk_size=chunk_size,
@@ -41,13 +37,7 @@ def example_random_data():
     print("\n### encoded_prompt:")
     print(encoded_prompt)
 
-    # Must re-init llm here or decode fails for some reason
-    # IMPORTANT: this can trigger OOM silent fail, in which case decode
-    # and verify message match never runs and program exits as if successful.
-    llm = create_llm_client()
-
     decoded_msg = main_decode(
-        llm=llm,
         encoded_prompt=encoded_prompt,
         initial_prompt=initial_prompt,
         chunk_size=chunk_size,

@@ -1,7 +1,6 @@
 import logging
 import random
 from stego_llm import main_encode, main_decode
-from stego_llm.llm import create_llm_client
 
 
 DEBUG = True
@@ -29,14 +28,11 @@ def example_custom_prompts():
         "technical": "The algorithm processes data by first analyzing the input and then",
     }
 
-    llm = create_llm_client()
-
     for prompt_name, initial_prompt in prompts.items():
         print(f"\n=== Testing with {prompt_name} prompt ===")
         print(f"Initial prompt: {repr(initial_prompt)}")
 
         encoded_prompt = main_encode(
-            llm=llm,
             initial_prompt=initial_prompt,
             msg=original_msg,
             chunk_size=chunk_size,
@@ -47,10 +43,7 @@ def example_custom_prompts():
         print(f"Full length: {len(encoded_prompt)} characters")
 
         # Test decoding
-        llm = create_llm_client()  # Re-init for decoding
-
         decoded_msg = main_decode(
-            llm=llm,
             encoded_prompt=encoded_prompt,
             initial_prompt=initial_prompt,
             chunk_size=chunk_size,
