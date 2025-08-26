@@ -1,4 +1,5 @@
 import json
+import os
 import numpy as np
 from llama_cpp import Llama
 from .utilities import suppress_stderr, logits_to_probabilities, to_json
@@ -6,9 +7,14 @@ from .utilities import suppress_stderr, logits_to_probabilities, to_json
 
 @suppress_stderr
 def create_llm_client(
-    model_path="/home/user/dev/innocuous/data/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+    model_path=None,
 ):
     """Initialize and return a Llama LLM client."""
+    if model_path is None:
+        model_path = os.environ.get(
+            "INNOCUOUS_LLM_PATH",
+            "/home/user/dev/innocuous/data/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+        )
     return Llama(
         model_path=model_path,
         logits_all=True,

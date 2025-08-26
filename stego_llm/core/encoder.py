@@ -5,7 +5,11 @@ from stego_llm.steganography import (
     pre_selection_filter,
     post_selection_filter,
 )
-from stego_llm.llm import get_token_probabilities, logits_to_probabilities
+from stego_llm.llm import (
+    create_llm_client,
+    get_token_probabilities,
+    logits_to_probabilities,
+)
 from .trace import _trace_encoding_step
 
 
@@ -13,13 +17,14 @@ logger = logging.getLogger(__name__)
 
 
 def main_encode(
-    llm,
     initial_prompt,
     msg,
     chunk_size,
     num_logprobs,
+    llm_path=None,
 ):
     """Main encoding function for steganographic text generation."""
+    llm = create_llm_client(model_path=llm_path)
     enc_ints = message_to_chunks(msg, chunk_size=chunk_size)
     current_prompt = initial_prompt
 

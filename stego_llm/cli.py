@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 
 from stego_llm.core import main_decode, main_encode
-from stego_llm.llm import create_llm_client
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +14,7 @@ def main():
     parser.add_argument(
         "-v", "--verbose", action="count", default=0, help="Increase verbosity"
     )
+    parser.add_argument("--llm-path", type=Path, help="Path to LLM GGUF file")
     parser.add_argument(
         "--chunk_size", type=int, default=3, help="Chunk size for encoding/decoding"
     )
@@ -75,13 +75,12 @@ def main():
         elif args.btc_addr:
             message_bytes = args.btc_addr.encode("utf-8")
 
-        llm = create_llm_client()
         encoded_message = main_encode(
-            llm=llm,
             initial_prompt=initial_prompt,
             msg=message_bytes,
             chunk_size=args.chunk_size,
             num_logprobs=num_logprobs,
+            llm_path=args.llm_path,
         )
         print(encoded_message)
 
@@ -92,13 +91,12 @@ def main():
         elif args.file:
             encoded_text = args.file.read_text()
 
-        llm = create_llm_client()
         decoded_bytes = main_decode(
-            llm=llm,
             encoded_prompt=encoded_text,
             initial_prompt=initial_prompt,
             chunk_size=args.chunk_size,
             num_logprobs=num_logprobs,
+            llm_path=args.llm_path,
         )
         print(repr(decoded_bytes))
 
