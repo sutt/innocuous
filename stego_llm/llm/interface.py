@@ -11,10 +11,9 @@ def create_llm_client(
 ):
     """Initialize and return a Llama LLM client."""
     if model_path is None:
-        model_path = os.environ.get(
-            "INNOCUOUS_LLM_PATH",
-            "/home/user/dev/innocuous/data/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
-        )
+        model_path = os.environ.get("INNOCUOUS_LLM_PATH")
+    if model_path is None:
+        raise ("Neither INNOCUOUS_LLM_PATH nor --llm-path supplied. Exiting.")
     return Llama(
         model_path=model_path,
         logits_all=True,
