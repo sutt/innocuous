@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 from stego_llm.core import main_decode, main_encode
+from stego_llm.llm import check_llm
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +43,9 @@ def main():
     decode_group.add_argument(
         "--file", type=Path, help="Path to file with message to decode"
     )
+
+    # Check LLM command
+    subparsers.add_parser("check-llm", help="Check LLM configuration")
 
     args = parser.parse_args()
 
@@ -99,6 +103,9 @@ def main():
             llm_path=args.llm_path,
         )
         print(repr(decoded_bytes))
+
+    elif args.command == "check-llm":
+        check_llm(llm_path=args.llm_path, verbose=args.verbose >= 2)
 
 
 if __name__ == "__main__":

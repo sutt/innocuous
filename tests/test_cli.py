@@ -143,3 +143,41 @@ def test_verbosity(mocker, verbose_arg, expected_level):
 
     mock_basic_config.assert_called_once()
     assert mock_basic_config.call_args.kwargs["level"] == expected_level
+
+
+def test_check_llm_path(mocker):
+    """Test check-llm command with --llm-path."""
+    mocker.patch("sys.argv", ["innocuous", "--llm-path", "fake.gguf", "check-llm"])
+    mock_check_llm = mocker.patch("stego_llm.cli.check_llm")
+
+    cli.main()
+
+    mock_check_llm.assert_called_once()
+    assert mock_check_llm.call_args.kwargs["llm_path"] is not None
+    assert str(mock_check_llm.call_args.kwargs["llm_path"]) == "fake.gguf"
+    assert not mock_check_llm.call_args.kwargs["verbose"]
+
+
+def test_check_llm_env(mocker):
+    """Test check-llm command with env var."""
+    mocker.patch.dict("os.environ", {"INNOCUOUS_LLM_PATH": "fake.gguf"})
+    mocker.patch("sys.argv", ["innocuous", "check-llm"])
+    mock_check_llm = mocker.patch("stego_llm.cli.check_llm")
+
+    cli.main()
+
+    mock_check_llm.assert_called_once()
+    assert mock_check_llm.call_args.kwargs["llm_path"] is None
+    assert not mock_check_llm.call_args.kwargs["verbose"]
+
+
+def test_check_llm_verbose(mocker):
+    """Test check-llm command with verbosity."""
+    mocker.patch("sys.argv", ["innocuous", "-vv", "check-llm"])
+    mock_check_llm = mocker.patch("stego_llm.cli.check_llm")
+
+    cli.main()
+
+    mock_check_llm.assert_called_once()
+    assert mock_check_llm.call_args.kwargs["llm_path"] is None
+    assert mock_check_llm.call_args.kwargs["verbose"]
