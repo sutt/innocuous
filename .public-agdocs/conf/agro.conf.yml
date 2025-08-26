@@ -48,22 +48,25 @@ EXEC_CMD_DEFAULT: maider.sh
 # AGENT_TYPE: aider
 
 # Agent-specific configuration.
-# AGENT_CONFIG:
+AGENT_CONFIG:
 #   aider:
 #     task_file_arg_template: ["-f", "{task_file}"]
 #     args: ["--yes", "--no-check-update", "--no-attribute-author", "--no-attribute-committer", "--no-attribute-co-authored-by"]
-#   claude:
-#     task_file_arg_template: null
-#     args: ["-d", "--allowedTools", "Write Edit MultiEdit", "--max-turns", "30", "-p"]
+  claude:
+    task_file_arg_template: null
+    # default claude config
+    # args: ["-d", "--allowedTools", "Write Edit MultiEdit", "--max-turns", "30", "-p"]
+    # agentic claude for devsummary-task-b
+    args: ["-d", "--allowedTools", "Bash(git:*) Write Edit MultiEdit", "--max-turns", "120", "-p"]
 #   gemini:
 #     task_file_arg_template: null
 #     args: ["-y"]
 
 # Agent-specific timeout settings in seconds.
 # A value of 0 means no timeout is applied, overriding any default.
-# AGENT_TIMEOUTS:
+AGENT_TIMEOUTS:
 #   aider: 0
-#   claude: 600
+  claude: 1200
 #   gemini: 600
 
 # Default command to open spec files with 'agro task'.
