@@ -24,6 +24,16 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["stego_llm"]
+ignore-vcs = true
+include = [
+  "stego_llm/**",
+  "pyproject.toml",
+  "README.md",
+  "LICENSE*",
+]
+
+[tool.hatch.build.targets.sdist]
+include = ["stego_llm", "pyproject.toml", "README.md", "LICENSE*"]
 
 [dependency-groups]
 dev = [
@@ -45,8 +55,3 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-
-[tool.uv.workspace]
-members = [
-    "bob",
-]
