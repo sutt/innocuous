@@ -5,15 +5,52 @@ All ai-assistance generated with [Agro](https://github.com/sutt/agro).
 
 ## v0.2.0
 
+This was a complete refactor of the package structure for best practices and to make it distributable.
+- The major refactor was handled with interative claude code session, so no specs on that.
+- All example script separated from core package and moved to examples/ directory.
+- Ruff format introduced as the linter and formatter in this version.
+
+After the refactor, several additional features were:
+- Add a CLI script to run the functionality.
+- Moved model_path hard-coding to variable in env var, cli arg, or function arg.
+- Updated the pyproject configs for building package.
+- Introduced dedicated tests directory.
+
+
 | Task File | Contents (truncated) | Accepted SHA | Non-test Diffs | Test Diffs | Notes |
 |------|-------------|---------|-------------|------------|-----------|
-| [devsummary-task-a.md](.public-agdocs/specs/devsummary-task-a.md) | Add updated taskfiles to markdown table in docs/dev-summary.md for v0.1.0 with filename, summary, and GitHub SHA links. Sort by date descending and include only specs/* files. | n/a | | | |
 | [update-examples.md](.public-agdocs/specs/update-examples.md) | Updates scripts in examples/ directory to reflect change about model_path needing to be passed in explicitly. Includes diffs for __init__.py, cli.py, core modules, and llm interface changes. | [be74868](https://github.com/sutt/innocuous/commit/be74868) | | | |
 | [fix-tests.md](.public-agdocs/specs/fix-tests.md) | Update tests to pass after changes to create_llm_client import and function signature. Tests were failing because create_llm_client was moved from cli.py and the function interface changed to accept llm_path parameter. | [55cf7ce](https://github.com/sutt/innocuous/commit/55cf7ce) | | | |
 | [check-llm.md](.public-agdocs/specs/check-llm.md) | Add subcommand "check-llm" and exportable function "check_llm" to verify LLM path from CLI/env var, check file existence, and execute simple inference task. Print terse confirmation of each step. | [e7b8d5b](https://github.com/sutt/innocuous/commit/e7b8d5b) | | | |
 | [modelpath-env.md](.public-agdocs/specs/modelpath-env.md) | In llm.interface:create_llm_client have model_path load from env var "INNOCUOUS_LLM_PATH". Add optional CLI arg and function args to override env var. | [55cf7ce](https://github.com/sutt/innocuous/commit/55cf7ce) | | | |
 | [devsummary-task-b.md](.public-agdocs/specs/devsummary-task-b.md) | Update table in docs/dev-summary.md for v0.1.0 with git diff values for code changes columns. Each value represented as "+A/-D" format for additions/deletions from git diff --stat. | [d3321ed](https://github.com/sutt/innocuous/commit/d3321ed) | | | |
+| [devsummary-task-a.md](.public-agdocs/specs/devsummary-task-a.md) | Add updated taskfiles to markdown table in docs/dev-summary.md for v0.1.0 with filename, summary, and GitHub SHA links. Sort by date descending and include only specs/* files. | [9f91a82](https://github.com/sutt/innocuous/commit/9f91a82) | | | |
 | [cli-add.md](.public-agdocs/specs/cli-add.md) | Add CLI interface for stego-llm package with script "innocuous" having encode/decode subcommands. Include optional flags for verbosity, chunk size, and initial prompt options. Create tests for functionality. | [0cb642f](https://github.com/sutt/innocuous/commit/0cb642f) | | | |
+
+```
+be74868 build: v0.2.0
+466af55 specs: v0.2.0
+e7b8d5b feat: add configurable LLM path and check-llm command
+3dbcef6 fix: fixups and env example
+0355954 feat: add check-llm subcommand to validate LLM configuration
+c7cdd56 test: remove mock for moved create_llm_client function
+010e17d fix: remove hardcoded model_path
+55cf7ce feat: allow specifying LLM path via CLI arg or env var
+6b3f7b0 format: ruff format for previous
+36d836d fix: hardcode prompt for cli + test_cli configs
+0cb642f feat: add innocuous command-line interface
+0738198 build: update uv.lock for new pkg structure
+447bb3b tests: create first demo test
+42449fb refactor: ruff format applied (first time)
+0f6c89d refactor: remove jupyter notebooks and notepad scripts
+40eab8c refactor: manually unnec modules and funcs from new package structure
+78770d5 refactor: another major pkg refactor
+fa88e0b refactor: major package refactor (claude)
+c10a969 refactor: move logging to central trace function (claude)
+d3321ed feat: impl devsummary-task-b with claude (agro auto-commit)
+d405351 docs: manual updates to dev-summary v0.1.0
+9f91a82 feat: impl devsummary-task-a with claude (agro auto-commit)
+```
 
 ## v0.1.0
 
