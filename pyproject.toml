@@ -1,6 +1,6 @@
 [project]
 name = "innocuous"
-version = "0.2.0"
+version = "0.2.1"
 description = "LLM steganography: encode and decode data in generated text"
 readme = "README.md"
 license = {text = "MIT"}
