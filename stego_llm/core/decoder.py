@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 from stego_llm.steganography import (
     chunks_to_message,
     find_acceptable_token,
@@ -17,13 +18,29 @@ logger = logging.getLogger(__name__)
 
 
 def main_decode(
-    encoded_prompt,
-    initial_prompt,
-    chunk_size,
-    num_logprobs,
-    llm_path=None,
-):
-    """Main decoding function for steganographic message extraction."""
+    encoded_prompt: str,
+    initial_prompt: str,
+    chunk_size: int,
+    num_logprobs: int,
+    llm_path: Optional[str] = None,
+) -> Optional[bytes]:
+    """Decodes a message hidden in a text.
+
+    This function extracts a hidden message from a text that was encoded
+    using steganography. It uses a language model to determine the likely
+    sequence of tokens that represent the hidden message.
+
+    Args:
+        encoded_prompt (str): The text containing the hidden message.
+        initial_prompt (str): The initial text used to start the encoding process.
+        chunk_size (int): The number of bits per chunk used for encoding.
+        num_logprobs (int): The number of token probabilities to consider.
+        llm_path (Optional[str]): The path to the language model file.
+            If None, the default model is used.
+
+    Returns:
+        Optional[bytes]: The decoded message as bytes, or None if decoding fails.
+    """
     llm = create_llm_client(model_path=llm_path)
     message_carrying_text = encoded_prompt[len(initial_prompt) :]
     memo = {}
