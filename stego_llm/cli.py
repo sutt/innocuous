@@ -3,6 +3,7 @@ import logging
 import sys
 from pathlib import Path
 
+from stego_llm import __version__
 from stego_llm.core import main_decode, main_encode
 from stego_llm.llm import check_llm
 
@@ -12,6 +13,9 @@ logger = logging.getLogger(__name__)
 def main():
     """CLI entry point."""
     parser = argparse.ArgumentParser(description="LLM Steganography")
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     parser.add_argument(
         "-v", "--verbose", action="count", default=0, help="Increase verbosity"
     )
