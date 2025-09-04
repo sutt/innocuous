@@ -5,6 +5,7 @@ from stego_llm.steganography import (
     find_acceptable_token,
     pre_selection_filter,
     post_selection_filter,
+    auto_accept_token,
 )
 from stego_llm.llm import (
     create_llm_client,
@@ -57,18 +58,28 @@ def main_decode(
             llm, prompt=current_prompt, num_output=num_logprobs
         )
         toks = logits_to_probabilities(toks)
+        _trace_decoding_step("tokens_processed", toks=toks)
         toks = pre_selection_filter(toks)
 
         accepted_tok = find_acceptable_token(toks)
         if accepted_tok is not None:
             if remaining_text.startswith(accepted_tok):
+                _trace_decoding_step("condition_found", condition='starts_with')
                 new_prompt = current_prompt + accepted_tok
                 new_remaining = remaining_text[len(accepted_tok) :]
 
                 result = solve(new_prompt, new_remaining)
                 memo[state] = result
                 return result
+            elif auto_accept_token(accepted_tok):
+                _trace_decoding_step("condition_found", condition='auto_accept_filled')
+                new_prompt = current_prompt + accepted_tok
+
+                result = solve(new_prompt, remaining_text)
+                memo[state] = result
+                return result
             else:
+                _trace_decoding_step("condition_found", condition='no_match_at_all')
                 memo[state] = None
                 return None
 

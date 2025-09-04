@@ -3,6 +3,7 @@ from .filters import (
     find_acceptable_token,
     pre_selection_filter,
     post_selection_filter,
+    auto_accept_token,
 )
 
 __all__ = [
@@ -11,4 +12,5 @@ __all__ = [
     "find_acceptable_token",
     "pre_selection_filter",
     "post_selection_filter",
+    "auto_accept_token",
 ]

@@ -17,11 +17,13 @@ def cleanup_between_tests():
     """
     Allow memory cleanup between heavy LLM tests to avoid OOM.
     Run as `pytest -m slow -s -v` to see this fixture at work with timings.
-    Run the following and look for exit code 137 if oom kill suspected: 
+    Run the following and look for exit code 137 if oom kill suspected:
     >  dmesg -T | egrep -i 'out of memory|oom-kill|Killed process|cgroup: memory'
     """
     yield
-    print(f"\n[CLEANUP] Running garbage collection and 2s sleep at {time.strftime('%H:%M:%S')}")
+    print(
+        f"\n[CLEANUP] Running garbage collection and 2s sleep at {time.strftime('%H:%M:%S')}"
+    )
     gc.collect()
     time.sleep(2)
 
@@ -96,7 +98,6 @@ Yet still no heir to
     assert decoded_message == encoded_message
 
 
-@pytest.mark.xfail
 @pytest.mark.slow
 @pytest.mark.skipif(
     not TEST_LLM_PATH,
@@ -106,7 +107,7 @@ def test_decode_example_2():
     """
     Test decoder only
     Use example from previous test: test_decode_example_1
-    But with punctuation removed (commas at end of each line) 
+    But with punctuation removed (commas at end of each line)
     to confuse the decoding and see if it can recover.
     """
 
