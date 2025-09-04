@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 def main_encode(
     initial_prompt: str,
     msg: bytes,
-    chunk_size: int,
-    num_logprobs: int,
+    chunk_size: int = 2,
+    num_logprobs: int = 100,
     llm_path: Optional[str] = None,
 ) -> str:
     """Encodes a message into a text using steganography.

@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 def main_decode(
     encoded_prompt: str,
     initial_prompt: str,
-    chunk_size: int,
-    num_logprobs: int,
+    chunk_size: int = 2,
+    num_logprobs: int = 100,
     llm_path: Optional[str] = None,
 ) -> Optional[bytes]:
     """Decodes a message hidden in a text.
