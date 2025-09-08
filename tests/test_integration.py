@@ -1,4 +1,6 @@
 import os
+import time
+import gc
 
 import pytest
 
@@ -8,6 +10,20 @@ from stego_llm.core import main_decode, main_encode
 TEST_LLM_PATH = os.environ.get("INNOCUOUS_TEST_LLM_PATH")
 if TEST_LLM_PATH is None:
     TEST_LLM_PATH = os.environ.get("INNOCUOUS_LLM_PATH")
+
+
+@pytest.fixture(autouse=True)
+def cleanup_between_tests():
+    """
+    Allow memory cleanup between heavy LLM tests to avoid OOM.
+    Run as `pytest -m slow -s -v` to see this fixture at work with timings.
+    Run the following and look for exit code 137 if oom kill suspected: 
+    >  dmesg -T | egrep -i 'out of memory|oom-kill|Killed process|cgroup: memory'
+    """
+    yield
+    print(f"\n[CLEANUP] Running garbage collection and 2s sleep at {time.strftime('%H:%M:%S')}")
+    gc.collect()
+    time.sleep(2)
 
 
 @pytest.mark.slow
@@ -90,8 +106,10 @@ def test_decode_example_2():
     """
     Test decoder only
     Use example from previous test: test_decode_example_1
-    But with punctuation removed to confuse the decoding
+    But with punctuation removed (commas at end of each line) 
+    to confuse the decoding and see if it can recover.
     """
+
     GENERATED_TEXT_NO_PUNCTUATION = """
 Below is an iambic penatameter poem. Complete it:
 The king of all the realms did lie there weak
@@ -123,4 +141,4 @@ if __name__ == "__main__":
 
     # test_encode_decode_integration()
     # test_decode_example_1()
-    test_decode_example_2()
+    # test_decode_example_2()
