@@ -23,6 +23,12 @@ def main():
     parser.add_argument(
         "--chunk_size", type=int, default=2, help="Chunk size for encoding/decoding"
     )
+    parser.add_argument(
+        "--num-logprobs",
+        type=int,
+        default=100,
+        help="Number of log probabilities to consider",
+    )
     prompt_group = parser.add_mutually_exclusive_group()
     prompt_group.add_argument(
         "--initial-prompt-text", type=str, help="Initial prompt text"
@@ -66,8 +72,6 @@ def main():
     elif args.initial_prompt_file:
         initial_prompt = args.initial_prompt_file.read_text()
 
-    # Hardcoded for now
-    num_logprobs = 100
     if initial_prompt is None:
         initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king"
 
@@ -87,7 +91,7 @@ def main():
             initial_prompt=initial_prompt,
             msg=message_bytes,
             chunk_size=args.chunk_size,
-            num_logprobs=num_logprobs,
+            num_logprobs=args.num_logprobs,
             llm_path=args.llm_path,
         )
         print(encoded_message)
@@ -103,7 +107,7 @@ def main():
             encoded_prompt=encoded_text,
             initial_prompt=initial_prompt,
             chunk_size=args.chunk_size,
-            num_logprobs=num_logprobs,
+            num_logprobs=args.num_logprobs,
             llm_path=args.llm_path,
         )
         print(repr(decoded_bytes))
