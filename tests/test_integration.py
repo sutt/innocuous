@@ -6,6 +6,35 @@ import pytest
 
 from stego_llm.core import main_decode, main_encode
 
+
+def test_encode_llm_extra_args(mocker):
+    """Test that llm_extra_args are passed to create_llm_client in main_encode."""
+    mock_create_llm = mocker.patch("stego_llm.core.encoder.create_llm_client")
+
+    main_encode(
+        initial_prompt="test",
+        msg=b"",
+        llm_extra_args={"n_ctx": 1024},
+        llm_path="dummy",
+    )
+
+    mock_create_llm.assert_called_once_with(model_path="dummy", n_ctx=1024)
+
+
+def test_decode_llm_extra_args(mocker):
+    """Test that llm_extra_args are passed to create_llm_client in main_decode."""
+    mock_create_llm = mocker.patch("stego_llm.core.decoder.create_llm_client")
+
+    main_decode(
+        encoded_prompt="test",
+        initial_prompt="test",
+        llm_extra_args={"n_ctx": 1024},
+        llm_path="dummy",
+    )
+
+    mock_create_llm.assert_called_once_with(model_path="dummy", n_ctx=1024)
+
+
 # Get model path from environment variable: preferred and fallabck
 TEST_LLM_PATH = os.environ.get("INNOCUOUS_TEST_LLM_PATH")
 if TEST_LLM_PATH is None:
