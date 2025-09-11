@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Optional, Dict, Any
 from stego_llm.steganography import (
     chunks_to_message,
     find_acceptable_token,
@@ -24,6 +24,7 @@ def main_decode(
     chunk_size: int = 2,
     num_logprobs: int = 100,
     llm_path: Optional[str] = None,
+    llm_extra_args: Dict[str, Any] = {}
 ) -> Optional[bytes]:
     """Decodes a message hidden in a text.
 
@@ -38,11 +39,12 @@ def main_decode(
         num_logprobs (int): The number of token probabilities to consider.
         llm_path (Optional[str]): The path to the language model file.
             If None, the default model is used.
+        llm_extra_args (Optional Dict): additional args to pass to llama_cpp constructor.
 
     Returns:
         Optional[bytes]: The decoded message as bytes, or None if decoding fails.
     """
-    llm = create_llm_client(model_path=llm_path)
+    llm = create_llm_client(model_path=llm_path, **llm_extra_args)
     message_carrying_text = encoded_prompt[len(initial_prompt) :]
     memo = {}
 

@@ -8,6 +8,7 @@ from .utilities import suppress_stderr, logits_to_probabilities, to_json
 @suppress_stderr
 def create_llm_client(
     model_path=None,
+    **llm_options,
 ):
     """Initialize and return a Llama LLM client."""
     if model_path is None:
@@ -17,6 +18,7 @@ def create_llm_client(
     return Llama(
         model_path=str(model_path),
         logits_all=True,
+        **llm_options
     )
 
 

@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Optional, Dict, Any
 from stego_llm.steganography import (
     message_to_chunks,
     find_acceptable_token,
@@ -23,6 +23,7 @@ def main_encode(
     chunk_size: int = 2,
     num_logprobs: int = 100,
     llm_path: Optional[str] = None,
+    llm_extra_args: Dict[str, Any] = {}
 ) -> str:
     """Encodes a message into a text using steganography.
 
@@ -37,11 +38,12 @@ def main_encode(
         num_logprobs (int): The number of next-token probabilities to request from the LLM.
         llm_path (Optional[str]): The path to the language model file.
             If None, the default model is used.
+        llm_extra_args (Optional Dict): additional args to pass to llama_cpp constructor.
 
     Returns:
         str: The generated text with the message embedded within it.
     """
-    llm = create_llm_client(model_path=llm_path)
+    llm = create_llm_client(model_path=llm_path, **llm_extra_args)
     enc_ints = message_to_chunks(msg, chunk_size=chunk_size)
     current_prompt = initial_prompt
 
