@@ -21,7 +21,7 @@ def main():
     )
     parser.add_argument("--llm-path", type=Path, help="Path to LLM GGUF file")
     parser.add_argument(
-        "--chunk_size", type=int, default=3, help="Chunk size for encoding/decoding"
+        "--chunk_size", type=int, default=2, help="Chunk size for encoding/decoding"
     )
     prompt_group = parser.add_mutually_exclusive_group()
     prompt_group.add_argument(
