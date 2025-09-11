@@ -15,11 +15,7 @@ def create_llm_client(
         model_path = os.environ.get("INNOCUOUS_LLM_PATH")
     if model_path is None:
         raise Exception("Neither INNOCUOUS_LLM_PATH nor --llm-path supplied. Exiting.")
-    return Llama(
-        model_path=str(model_path),
-        logits_all=True,
-        **llm_options
-    )
+    return Llama(model_path=str(model_path), logits_all=True, **llm_options)
 
 
 @suppress_stderr

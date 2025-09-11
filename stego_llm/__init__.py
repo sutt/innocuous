@@ -3,6 +3,7 @@ LLM Steganography Package
 
 A library for embedding and extracting hidden messages in LLM-generated text.
 """
+
 from importlib import metadata
 
 from .core import main_encode, main_decode

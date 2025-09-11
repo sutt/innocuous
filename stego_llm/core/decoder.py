@@ -24,7 +24,7 @@ def main_decode(
     chunk_size: int = 2,
     num_logprobs: int = 100,
     llm_path: Optional[str] = None,
-    llm_extra_args: Dict[str, Any] = {}
+    llm_extra_args: Dict[str, Any] = {},
 ) -> Optional[bytes]:
     """Decodes a message hidden in a text.
 
@@ -66,7 +66,7 @@ def main_decode(
         accepted_tok = find_acceptable_token(toks)
         if accepted_tok is not None:
             if remaining_text.startswith(accepted_tok):
-                _trace_decoding_step("condition_found", condition='starts_with')
+                _trace_decoding_step("condition_found", condition="starts_with")
                 new_prompt = current_prompt + accepted_tok
                 new_remaining = remaining_text[len(accepted_tok) :]
 
@@ -74,14 +74,14 @@ def main_decode(
                 memo[state] = result
                 return result
             elif auto_accept_token(accepted_tok):
-                _trace_decoding_step("condition_found", condition='auto_accept_filled')
+                _trace_decoding_step("condition_found", condition="auto_accept_filled")
                 new_prompt = current_prompt + accepted_tok
 
                 result = solve(new_prompt, remaining_text)
                 memo[state] = result
                 return result
             else:
-                _trace_decoding_step("condition_found", condition='no_match_at_all')
+                _trace_decoding_step("condition_found", condition="no_match_at_all")
                 memo[state] = None
                 return None
 

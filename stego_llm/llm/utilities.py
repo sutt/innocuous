@@ -33,13 +33,13 @@ def my_log_callback(level, message, user_data):
 
 def logging_override_func():
     """
-    This was needed in previous python-llama-cpp version to suppress outputs when 
-    model was loaded. Currently not utilized, but available. Previously these methods 
+    This was needed in previous python-llama-cpp version to suppress outputs when
+    model was loaded. Currently not utilized, but available. Previously these methods
     were called in base namespace, not wrapped in a function / separate module.
     """
-    log_callback = ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.c_char_p, ctypes.c_void_p)(
-        my_log_callback
-    )
+    log_callback = ctypes.CFUNCTYPE(
+        None, ctypes.c_int, ctypes.c_char_p, ctypes.c_void_p
+    )(my_log_callback)
 
     llama_log_set(log_callback, ctypes.c_void_p())
 

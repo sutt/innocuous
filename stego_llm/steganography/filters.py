@@ -26,10 +26,11 @@ def find_acceptable_token(data: Dict) -> Optional[str]:
         return pairs[0][0]
     return None
 
+
 def auto_accept_token(tok: str) -> bool:
     """
     Return true to decoder if this is a token auto-accepted via encoder
-    e.g. common punctuation marks in v1 format. 
+    e.g. common punctuation marks in v1 format.
     TODO - this should be refactored to handle variable enc/dec schemes.
     """
     return tok in [", ", ",", " ,", ".", ". ", "\n"]

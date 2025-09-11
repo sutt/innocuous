@@ -23,7 +23,7 @@ def main_encode(
     chunk_size: int = 2,
     num_logprobs: int = 100,
     llm_path: Optional[str] = None,
-    llm_extra_args: Dict[str, Any] = {}
+    llm_extra_args: Dict[str, Any] = {},
 ) -> str:
     """Encodes a message into a text using steganography.
 
