@@ -21,7 +21,7 @@ def main():
     )
     parser.add_argument("--llm-path", type=Path, help="Path to LLM GGUF file")
     parser.add_argument(
-        "--chunk_size", type=int, default=2, help="Chunk size for encoding/decoding"
+        "--chunk-size", type=int, default=2, help="Chunk size for encoding/decoding"
     )
     parser.add_argument(
         "--num-logprobs",

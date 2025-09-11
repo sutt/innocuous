@@ -111,7 +111,7 @@ def test_initial_prompt_file(mocker, tmp_path):
 def test_chunk_size(mocker):
     """Test --chunk_size flag."""
     mocker.patch(
-        "sys.argv", ["innocuous", "--chunk_size", "4", "encode", "--text", "t"]
+        "sys.argv", ["innocuous", "--chunk-size", "4", "encode", "--text", "t"]
     )
     mock_main_encode = mocker.patch("stego_llm.cli.main_encode")
     mocker.patch("builtins.print")
