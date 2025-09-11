@@ -3,6 +3,39 @@ Looks at tasks and associated commit solutions generated each release.
 
 All ai-assistance generated with [Agro](https://github.com/sutt/agro).
 
+## v0.2.2
+
+Package build problem, fixed ([e10906f](https://github.com/sutt/innocuous/commit/e10906f)) and released.
+
+```
+1505e99 (tag: v0.2.2, origin/master, master) build: bump version v0.2.2
+e10906f build: fix hatch build includes
+ddc0320 (tag: v0.2.1) build: bump version v0.2.1
+```
+
+## v0.2.1
+
+Misc updates to docs and repo structure, prepare for pypi release.
+
+| Task File | Contents (truncated) | Accepted SHA | Src Diffs | Test Diffs | Notes |
+|------|-------------|---------|-------------|------------|-----------|
+| [devsummary-task-b.md](../.public-agdocs/specs/devsummary-task-b.md) | Update table in docs/dev-summary.md for v0.1.0 with git diff values for code changes columns. Each value represented as "+A/-D" format for additions/deletions from git diff --stat. | [97da5a8](https://github.com/sutt/innocuous/commit/97da5a8) | +0/-0 | +0/-0 |  |
+| [devsummary-task-a.md](../.public-agdocs/specs/devsummary-task-a.md) | Add updated taskfiles to markdown table in docs/dev-summary.md for v0.1.0 with filename, summary, and GitHub SHA links. Sort by date descending and include only specs/* files. | [46468bd](https://github.com/sutt/innocuous/commit/46468bd) | +0/-0 | +0/-0 | |
+
+```
+ddc0320 (tag: v0.2.1) build: bump version v0.2.1
+a7ec924 docs: major update for readme
+31502d9 docs: manual fixes and commit notes for dev-summary
+97da5a8 feat: impl devsummary-task-b with claude (agro auto-commit)
+5e49bd9 docs: manual updates to dev-summary
+46468bd feat: impl devsummary-task-a with claude (agro auto-commit)
+1b6b0e8 build: add MIT license
+6af0e2d build: update pkg name and build system
+0b1d927 pkg: rm scripts folder to reduce clutter
+086d3af docs: adding jupyter example
+be74868 (tag: v0.2.0) build: v0.2.0
+```
+
 ## v0.2.0
 
 This was a complete refactor of the package structure for best practices and to make it distributable.
