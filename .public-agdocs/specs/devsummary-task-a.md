@@ -2,7 +2,7 @@
 Utilize these variables below for the task as you read it and process it. The script var will be denoted with $my_script_var when utilized and should be read the value corresponding.
 
 - target_doc: docs/dev-summary.md 
-- version_to_update: v0.1.0
+- version_to_update: v0.2.0
 - max_summary_chars: 250
 - repo_url: github.com/sutt/innocuous
 
@@ -40,12 +40,17 @@ Rules for the table:
 ##### Spec Changes
 Here's the result for the following command:
 
-git diff --stat -- .public-agdocs/specs
+git diff --stat v0.1.0 v0.2.0 -- .public-agdocs/specs
 
- .public-agdocs/specs/decode-accept-1.md       | 71 ++++++++++++++++++++++
- .public-agdocs/specs/decode-branch.md         |  6 ++
- .public-agdocs/specs/decode1.md               |  1 +
- .public-agdocs/specs/prepost-filter-decode.md | 77 ++++++++++++++++++++++++
+ .public-agdocs/specs/check-llm.md         |  10 +
+ .public-agdocs/specs/cli-add.md           |  25 +
+ .public-agdocs/specs/devsummary-task-a.md | 102 ++++
+ .public-agdocs/specs/devsummary-task-b.md |  75 +++
+ .public-agdocs/specs/fix-tests.md         | 862 ++++++++++++++++++++++++++++++
+ .public-agdocs/specs/modelpath-env.md     |   5 +
+ .public-agdocs/specs/update-examples.md   | 240 +++++++++
+ 7 files changed, 1319 insertions(+)
+
 
 ##### Specs Time-Sorted
 Here's the information for the date created which should be used to sort the rows for the table above.
@@ -54,49 +59,43 @@ Results of the command:
 
 ls -lt .agdocs/specs/ 
 
--rw-r--r-- 1 user user 2541 Aug 23 08:28 prepost-filter-decode.md
--rw-r--r-- 1 user user 2216 Aug 21 19:35 decode-accept-1.md
--rw-r--r-- 1 user user  853 Aug 20 18:20 decode-branch.md
--rw-r--r-- 1 user user   36 Aug 20 14:10 decode1.md
+total 84
+-rw-r--r-- 1 user user  4734 Aug 27 09:03 devsummary-task-a.md
+-rw-r--r-- 1 user user  7671 Aug 25 22:03 update-examples.md
+-rw-r--r-- 1 user user 34787 Aug 25 21:12 fix-tests.md
+-rw-r--r-- 1 user user   620 Aug 25 21:03 check-llm.md
+-rw-r--r-- 1 user user   290 Aug 25 20:59 modelpath-env.md
+-rw-r--r-- 1 user user  3554 Aug 25 17:43 devsummary-task-b.md
+-rw-r--r-- 1 user user  1322 Aug 25 11:14 cli-add.md
+
 
 ##### Commit Logs
 Here's the output of the following command, use this to link a solution sha to a task file
 
 git log --oneline --no-merges  --not  -n 36
 
+be74868 build: v0.2.0
+466af55 specs: v0.2.0
+e7b8d5b feat: add configurable LLM path and check-llm command
+3dbcef6 fix: fixups and env example
+0355954 feat: add check-llm subcommand to validate LLM configuration
+c7cdd56 test: remove mock for moved create_llm_client function
+010e17d fix: remove hardcoded model_path
+55cf7ce feat: allow specifying LLM path via CLI arg or env var
+6b3f7b0 format: ruff format for previous
+36d836d fix: hardcode prompt for cli + test_cli configs
+0cb642f feat: add innocuous command-line interface
+0738198 build: update uv.lock for new pkg structure
+447bb3b tests: create first demo test
+42449fb refactor: ruff format applied (first time)
+0f6c89d refactor: remove jupyter notebooks and notepad scripts
+40eab8c refactor: manually unnec modules and funcs from new package structure
+78770d5 refactor: another major pkg refactor
+fa88e0b refactor: major package refactor (claude)
+c10a969 refactor: move logging to central trace function (claude)
+d3321ed feat: impl devsummary-task-b with claude (agro auto-commit)
+d405351 docs: manual updates to dev-summary v0.1.0
+9f91a82 feat: impl devsummary-task-a with claude (agro auto-commit)
 38062ca docs: add dev-summary template
 6d8eafd specs: v0.1.0
-39478a7 docs: adding v3 examples and script to cvt to md format
-00783db fix: manual fix + cleanup test example
-960c697 refactor: apply pre/post accept filters to main_decode
-3c5bc77 feat: filtering split to pre and post accept logic block
-d89307a docs: add examples from new encode scheme, and small cleanup to code
-79a4c67 feat: apply accept_tok logic to decoder
-eb303f9 feat: adding prob value threshold for accept criteria
-4b9a9d0 feat: apply accept_tok + examples to prove it works
-46e1d16 refactor: minor cleanups
-bc58fab docs: adding agro specs
-197f267 docs: add initial results to readme
-6257592 docs: add logs of initial results
-ecc056b fix: manual fixes to make memo solution to decode work
-cdabc98 refactor: use backtracking to resolve ambiguous token matches
-02ad3e4 tmp: muster trees
-61bde35 tmp: for tree muster
-8d12aa1 test: adding a test for ai-gens
-c178a5b feat: adding vocab_mistral.txt
-c6ccbaa feat: added btc addr module
-be31dde refactor: main now does encode decode with same args
-d4dd55e feat: implement main_decode and run full encode/decode cycle
-9d5dc59 main_encode is working
-6ab0b6e app outine in src setup
-4d536ac workspace basecamp
-a0ff35d docs for simple.py
-7cf9ede simple.py is working!
-a037dcc almost there with simple.py, about to refactor
-715acb8 simple.py: works for some encode/decode combos
-270e963 refactor: Convert decimal and random operations to numpy
-980663f two.py for gpt demo
-aeb69f8 basecamp for encode/decode
-1787b0a feat: apply softmax to selections
-d654030 prepping for simple script
-dbc5295 proj init + hello llama
+

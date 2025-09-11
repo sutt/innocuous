@@ -1,0 +1,1 @@
+allow the cli and the python import to list the version of the package that exists in the pyproject.toml

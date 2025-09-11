@@ -2,9 +2,9 @@
 Utilize these variables below for the task as you read it and process it. The script var will be denoted with $my_script_var when utilized and should be read the value corresponding.
 
 - target_doc: docs/dev-summary.md 
-- version_to_update: v0.1.0
-- diffs_main_directory: src
-- diffs_on_other_directories: n/a
+- version_to_update: v0.2.0
+- diffs_main_directory: stego_llm
+- diffs_on_other_directories: tests
 
 ### Steps to Update & Execute this Spec
 This section should be ignored by the AI agent; it's for the developer's reference to edit this file for:
@@ -20,9 +20,10 @@ These are the instructions for your task. Remember to insert the script vars fro
 update the table in $target_doc:
 - update the table for $version_to_update
 - add values for all (or some of) the "code changes" / "diffs" columns:
-    - use the column name to understand which slices of the codebase should be considered for the diffs
-    - for the first diff column, use the diffs in $diff_main_directory
-    - for other columns, use the columns name as a hint to try to match to a directory in repo root, and use the $diff_on_other_directories values for guidance (if the value is set to n/a then place "n/a" in the all the other non-main diff columns for the version being updated.)
+    - use the column name to understand which slices of the codebase should be considered for the diffs.
+    - these code diffs should only apply to the particular git commit referenced in that row of the table (it should not be the total diffs over the whole version)
+    - for the first diff column, use the diffs from within directory $diff_main_directory
+    - for the second diff column, use the the diffs from within directory $diff_on_other_directories
 - each value should be represented as "+A/-D" where A is the number of additions and -D is deletion or modifications from a git diff / git diff --stat,
     - e.g. "+23/-12", or "+5/-0"
 
@@ -34,42 +35,30 @@ Rules used to build the table previously:
 
 Reference for commit sha's in the table
 ```
+be74868 build: v0.2.0
+466af55 specs: v0.2.0
+e7b8d5b feat: add configurable LLM path and check-llm command
+3dbcef6 fix: fixups and env example
+0355954 feat: add check-llm subcommand to validate LLM configuration
+c7cdd56 test: remove mock for moved create_llm_client function
+010e17d fix: remove hardcoded model_path
+55cf7ce feat: allow specifying LLM path via CLI arg or env var
+6b3f7b0 format: ruff format for previous
+36d836d fix: hardcode prompt for cli + test_cli configs
+0cb642f feat: add innocuous command-line interface
+0738198 build: update uv.lock for new pkg structure
+447bb3b tests: create first demo test
+42449fb refactor: ruff format applied (first time)
+0f6c89d refactor: remove jupyter notebooks and notepad scripts
+40eab8c refactor: manually unnec modules and funcs from new package structure
+78770d5 refactor: another major pkg refactor
+fa88e0b refactor: major package refactor (claude)
+c10a969 refactor: move logging to central trace function (claude)
+d3321ed feat: impl devsummary-task-b with claude (agro auto-commit)
+d405351 docs: manual updates to dev-summary v0.1.0
+9f91a82 feat: impl devsummary-task-a with claude (agro auto-commit)
 38062ca docs: add dev-summary template
 6d8eafd specs: v0.1.0
-39478a7 docs: adding v3 examples and script to cvt to md format
-00783db fix: manual fix + cleanup test example
-960c697 refactor: apply pre/post accept filters to main_decode
-3c5bc77 feat: filtering split to pre and post accept logic block
-d89307a docs: add examples from new encode scheme, and small cleanup to code
-79a4c67 feat: apply accept_tok logic to decoder
-eb303f9 feat: adding prob value threshold for accept criteria
-4b9a9d0 feat: apply accept_tok + examples to prove it works
-46e1d16 refactor: minor cleanups
-bc58fab docs: adding agro specs
-197f267 docs: add initial results to readme
-6257592 docs: add logs of initial results
-ecc056b fix: manual fixes to make memo solution to decode work
-cdabc98 refactor: use backtracking to resolve ambiguous token matches
-02ad3e4 tmp: muster trees
-61bde35 tmp: for tree muster
-8d12aa1 test: adding a test for ai-gens
-c178a5b feat: adding vocab_mistral.txt
-c6ccbaa feat: added btc addr module
-be31dde refactor: main now does encode decode with same args
-d4dd55e feat: implement main_decode and run full encode/decode cycle
-9d5dc59 main_encode is working
-6ab0b6e app outine in src setup
-4d536ac workspace basecamp
-a0ff35d docs for simple.py
-7cf9ede simple.py is working!
-a037dcc almost there with simple.py, about to refactor
-715acb8 simple.py: works for some encode/decode combos
-270e963 refactor: Convert decimal and random operations to numpy
-980663f two.py for gpt demo
-aeb69f8 basecamp for encode/decode
-1787b0a feat: apply softmax to selections
-d654030 prepping for simple script
-dbc5295 proj init + hello llama
 ```
 
 

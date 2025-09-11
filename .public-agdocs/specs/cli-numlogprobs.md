@@ -1,0 +1,1 @@
+on the cli, create an optional argument for --num-logprobs which defaults to 100.
