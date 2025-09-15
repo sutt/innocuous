@@ -7,11 +7,11 @@ All ai-assistance generated with [Agro](https://github.com/sutt/agro).
 
 | Task File | Contents (truncated) | Accepted SHA | Diffs | Test Diffs | Notes |
 |------|-------------|---------|-------------|------------|-----------|
-| [extra-args-test.md](../.public-agdocs/specs/extra-args-test.md) | Add 1-2 tests for llm_extra_args feature. Test that args pass through encode/decode to constructors without real inference. Example usage: llm_extra_args={"n_ctx": 1024}. Mock instantiation/loading. | [9abdb61](https://github.com/sutt/innocuous/commit/9abdb61) |  |  |  |
-| [cli-numlogprobs.md](../.public-agdocs/specs/cli-numlogprobs.md) | Create optional CLI argument --num-logprobs with default value of 100. | [fe8dbf6](https://github.com/sutt/innocuous/commit/fe8dbf6) |  |  |  |
-| [integration-test.md](../.public-agdocs/specs/integration-test.md) | Add integration test: msg0 -> encode -> decode -> msg1, assert msg0==msg1. Use pytest marker for slow tests. Mock env variable or config for model_path. | [6203b4a](https://github.com/sutt/innocuous/commit/6203b4a) |  |  |  |
-| [type-main-funcs.md](../.public-agdocs/specs/type-main-funcs.md) | Add type hints for args and return types to decoder.main_decoder and encoder.main_encode in stego_llm.core. Include expanded docstrings. | [b00dd60](https://github.com/sutt/innocuous/commit/b00dd60) |  |  |  |
-| [version-cmd.md](../.public-agdocs/specs/version-cmd.md) | Enable CLI and Python import to display package version from pyproject.toml. | [80791f9](https://github.com/sutt/innocuous/commit/80791f9) |  |  |  |
+| [extra-args-test.md](../.public-agdocs/specs/extra-args-test.md) | Add 1-2 tests for llm_extra_args feature. Test that args pass through encode/decode to constructors without real inference. Example usage: llm_extra_args={"n_ctx": 1024}. Mock instantiation/loading. | [9abdb61](https://github.com/sutt/innocuous/commit/9abdb61) | +0/-0 | +29/-0 |  |
+| [cli-numlogprobs.md](../.public-agdocs/specs/cli-numlogprobs.md) | Create optional CLI argument --num-logprobs with default value of 100. | [fe8dbf6](https://github.com/sutt/innocuous/commit/fe8dbf6) | +8/-4 | +0/-0 |  |
+| [integration-test.md](../.public-agdocs/specs/integration-test.md) | Add integration test: msg0 -> encode -> decode -> msg1, assert msg0==msg1. Use pytest marker for slow tests. Mock env variable or config for model_path. | [6203b4a](https://github.com/sutt/innocuous/commit/6203b4a) | +0/-0 | +44/-0 |  |
+| [type-main-funcs.md](../.public-agdocs/specs/type-main-funcs.md) | Add type hints for args and return types to decoder.main_decoder and encoder.main_encode in stego_llm.core. Include expanded docstrings. | [b00dd60](https://github.com/sutt/innocuous/commit/b00dd60) | +48/-14 | +0/-0 |  |
+| [version-cmd.md](../.public-agdocs/specs/version-cmd.md) | Enable CLI and Python import to display package version from pyproject.toml. | [80791f9](https://github.com/sutt/innocuous/commit/80791f9) | +10/-2 | +0/-0 |  |
 
 ```
 04d2537 build: v0.2.3
