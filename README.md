@@ -88,7 +88,11 @@ For more check the [Showcase](./docs/showcase) section in the docs and the [Exam
 
 **UX Enhancements:** If you are a designer, you know that long serial numbers or cyphertexts can intimidate and offend the sensibilities of users. Innocuous can help you make playful text-based encodings that represent the same underlying data.
 
+**NFT's / Procedurally Generated Assets:** Sigh, I know. If you see it, you see it. But if you don't, more work on these coming soon.
+
 In a way it's like **Reverse-TinyURL**: _instead of being centralized database, it's decentralized protocol. And instead of making the content shorter and machine-like, it makes it longer and more human-like._
+
+In a way it's like a [**Seed Phrase**](https://en.bitcoin.it/wiki/Seed_phrase): _instead of being arbitrary un-correlated words, they are coherent texts where the words cohere into sentence(s)._
 
 **Examples of things that might be good for encoding:**
 - PGP Keys
@@ -252,9 +256,21 @@ LLM's work by predicting the next token. At each step, they assigin a probabilit
 
 But what if instead of chosing randomly, you **directed the choice** from the top-N tokens possibilities calculated by the LLM? This concept is known as _steering_ and can be used for a variety of applications. In our case we'll use the **index number** of the probability-ranked tokens to denote an encoded integer.
 
-This encoded integer can be represented in **binary form**, and by concatentating several steps and **concatenating the bits** of the integer at each step, we can construct bytes of data. And bytes of data can represent any form of data. Let's illustrate with an example of one step:
+This encoded integer can be represented in **binary form**, and by concatentating several steps and **concatenating the bits** of the integer at each step, we can construct bytes of data. And bytes of data can represent any form of data. Let's illustrate with an example of one step several iterations.
 
-(Maybe this is a mardown table of a code block)
+The following example encodes the ascii char "h" (or the bits "01101000") with a chunk_size=2 and is based off this [script](./examples/visit-boston.sh) and this [transfromation](./docs/tables/how-it-works-v1.md).
+
+|                           | Iter 1  | Iter 2 | Iter 3 | Iter 4 | Iter 5 | Iter 6 |
+|---------------------------|---------|--------|--------|--------|--------|--------|
+| **Selection (token)**     |  *The*  | *Aqu* | *arium* | *is* | *a* | *world* |
+| **Selection (encoding)**  | *01* | *10* | *n/a* | *n/a* | *10* | *00* |
+| **Cumulative encoding**   |  *01* | *0110* | *0110* | *0110* | *011010* | *01101000* |
+|                           |      |      |       |      |      |       |
+| **Index (encoding 2-bit)** | *encoded*  | *encoded* | *accepted* | *accepted* | *encoded* | *encoded* |
+| **0 (00)** | " It": 0.2958 | " aqu": 0.4469 | **"arium": 0.9999** | **" is": 0.8619** | " located": 0.4782 | **" world": 0.1646** |
+| **1 (01)** | **" The": 0.26917** |  " New": 0.4136 | "ari": < 1e-4 | " has": 0.0591 | " home": 0.2787 | " global": 0.1238 |
+| **2 (10)** | " This": 0.1813 | **" Aqu": 0.1020** | "aram": < 1e-4 | " features": 0.0182 | **" a": 0.0926** | " must": 0.0958 |
+| **3 (11)** | " Loc": 0.0318 | " Boston": 0.006 | "a": < 1e-4 | " offers": 0.0164 | " one": 0.0540 | " non": 0.0876 |
 
 The larger the **N** in the top-N tokens you consider at each step: the **more information encoded** for each word in the output. But likewise, larger N also means you'll often direct the selection of a token the model deems *unlikely*, leading to **less coherent output**. This puts an upper-limit on how much information can be encoded per token while keeping the output text generation seeming natural.
 
