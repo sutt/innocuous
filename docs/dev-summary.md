@@ -3,6 +3,38 @@ Looks at tasks and associated commit solutions generated each release.
 
 All ai-assistance generated with [Agro](https://github.com/sutt/agro).
 
+## v0.2.3
+
+| Task File | Contents (truncated) | Accepted SHA | Diffs | Test Diffs | Notes |
+|------|-------------|---------|-------------|------------|-----------|
+| [extra-args-test.md](../.public-agdocs/specs/extra-args-test.md) | Add 1-2 tests for llm_extra_args feature. Test that args pass through encode/decode to constructors without real inference. Example usage: llm_extra_args={"n_ctx": 1024}. Mock instantiation/loading. | [9abdb61](https://github.com/sutt/innocuous/commit/9abdb61) |  |  |  |
+| [cli-numlogprobs.md](../.public-agdocs/specs/cli-numlogprobs.md) | Create optional CLI argument --num-logprobs with default value of 100. | [fe8dbf6](https://github.com/sutt/innocuous/commit/fe8dbf6) |  |  |  |
+| [integration-test.md](../.public-agdocs/specs/integration-test.md) | Add integration test: msg0 -> encode -> decode -> msg1, assert msg0==msg1. Use pytest marker for slow tests. Mock env variable or config for model_path. | [6203b4a](https://github.com/sutt/innocuous/commit/6203b4a) |  |  |  |
+| [type-main-funcs.md](../.public-agdocs/specs/type-main-funcs.md) | Add type hints for args and return types to decoder.main_decoder and encoder.main_encode in stego_llm.core. Include expanded docstrings. | [b00dd60](https://github.com/sutt/innocuous/commit/b00dd60) |  |  |  |
+| [version-cmd.md](../.public-agdocs/specs/version-cmd.md) | Enable CLI and Python import to display package version from pyproject.toml. | [80791f9](https://github.com/sutt/innocuous/commit/80791f9) |  |  |  |
+
+```
+04d2537 build: v0.2.3
+222a1ca specs: v0.2.3
+f01571c docs: update dev-summary for 0.2.1 and 0.2.2
+b7c73e9 refactor: ruff format
+9abdb61 test: add tests for llm_extra_args passthrough
+2f85f37 feat: adding llm_extra_args for use in library functions
+deac5b5 refactor: llama logging override now wrapped as function
+77a030d refactor: cli arguments --chunk-size
+cbc0de0 refactor: logging enables info level, repr of output for -v mode.
+fe8dbf6 feat: add --num-logprobs argument to CLI
+313efe3 fix: cli defaults to chunk_size=2 (aligns with library method defaults)
+5b23579 feat: decoder fills in missing auto_accept tokens + debugging trace for decoder
+711aea0 test: add sleep + gc fixture to integration test setup
+f57aea1 test: refactor previous test, add decoder-only integration test
+6203b4a test: add integration test for full encode/decode cycle
+ddcd740 fix: add default arg vals
+b00dd60 refactor: add type hints and improve docstrings for core functions
+80791f9 feat: add --version flag and dynamic version loading
+1505e99 build: bump version v0.2.2
+```
+
 ## v0.2.2
 
 Package build problem, fixed ([e10906f](https://github.com/sutt/innocuous/commit/e10906f)) and released.
