@@ -7,6 +7,7 @@ import pytest
 from stego_llm.core import main_decode, main_encode
 
 
+@pytest.mark.no_cleanup
 def test_encode_llm_extra_args(mocker):
     """Test that llm_extra_args are passed to create_llm_client in main_encode."""
     mock_create_llm = mocker.patch("stego_llm.core.encoder.create_llm_client")
@@ -21,6 +22,7 @@ def test_encode_llm_extra_args(mocker):
     mock_create_llm.assert_called_once_with(model_path="dummy", n_ctx=1024)
 
 
+@pytest.mark.no_cleanup
 def test_decode_llm_extra_args(mocker):
     """Test that llm_extra_args are passed to create_llm_client in main_decode."""
     mock_create_llm = mocker.patch("stego_llm.core.decoder.create_llm_client")
@@ -42,13 +44,16 @@ if TEST_LLM_PATH is None:
 
 
 @pytest.fixture(autouse=True)
-def cleanup_between_tests():
+def cleanup_between_tests(request):
     """
     Allow memory cleanup between heavy LLM tests to avoid OOM.
     Run as `pytest -m slow -s -v` to see this fixture at work with timings.
     Run the following and look for exit code 137 if oom kill suspected:
     >  dmesg -T | egrep -i 'out of memory|oom-kill|Killed process|cgroup: memory'
     """
+    if "no_cleanup" in request.keywords:
+        yield
+        return
     yield
     print(
         f"\n[CLEANUP] Running garbage collection and 2s sleep at {time.strftime('%H:%M:%S')}"

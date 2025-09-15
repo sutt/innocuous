@@ -57,5 +57,6 @@ dev = [
 testpaths = ["tests"]
 markers = [
     "slow: marks tests as slow to run",
+    "no_cleanup: do *not* run the default gc/sleep cleanup fixture fro integration tests",
 ]
 addopts = "-m 'not slow'"
