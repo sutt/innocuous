@@ -5,28 +5,28 @@ DEBUG:stego_llm.steganography.codecs:encode_bits: 01101000
 
 ### Table v1
 
-|   | Iter 1 (token) | Iter 1 (enc) | Iter 2 (token) | Iter 2 (enc) |  Iter 3 (token) | Iter 3 (enc) |
-|------|------|-----------|------|-----------|------|-----------|
-| **Selection**     |  *The*  |  *01*  | *Aqu* | *10* | *arium* | n/a |
-| **Index (encoding)** | **Token** | **LogProb** | **Token** | **LogProb** | **Token** | **LogProb** |
-| 0 (00) | " It" | 0.2958 | " aqu" | 0.4469 | **"arium"** | **0.9999** |
-| 1 (01) | **" The"** | **0.26917** |  " New" | 0.4136 | "ari" | < 1e-4 |
-| 2 (10) | " This" | 0.1813 | **" Aqu"** | **0.1020** | "aram" | < 1e-4 |
-| 3 (11) | " Loc"| 0.0318 | " Boston" | 0.006 | "a"|  < 1e-4 |
+|   | Iter 1 (token) | Iter 1 (enc) | Iter 2 (token) | Iter 2 (enc) |  Iter 3 (token) | Iter 3 (enc) | Iter 4 (token) | Iter 4 (enc) | Iter 5 (token) | Iter 5 (enc) | Iter 6 (token) | Iter 6 (enc) |
+|------|------|-----------|------|-----------|------|-----------|------|-----------|------|-----------|------|-----------|
+| **Selection**     |  *The*  |  *01*  | *Aqu* | *10* | *arium* | n/a | *is* | n/a | *a* | *10* | *world* | *00* |
+| **Index (encoding)** | **Token** | **LogProb** | **Token** | **LogProb** | **Token** | **LogProb** | **Token** | **LogProb** | **Token** | **LogProb** | **Token** | **LogProb** |
+| 0 (00) | " It" | 0.2958 | " aqu" | 0.4469 | **"arium"** | **0.9999** | **" is"** | **0.8619** | " located" | 0.4782 | **" world"** | **0.1646** |
+| 1 (01) | **" The"** | **0.26917** |  " New" | 0.4136 | "ari" | < 1e-4 | " has" | 0.0591 | " home" | 0.2787 | " global" | 0.1238 |
+| 2 (10) | " This" | 0.1813 | **" Aqu"** | **0.1020** | "aram" | < 1e-4 | " features" | 0.0182 | **" a"** | **0.0926** | " must" | 0.0958 |
+| 3 (11) | " Loc"| 0.0318 | " Boston" | 0.006 | "a"|  < 1e-4 | " offers" | 0.0164 | " one" | 0.0540 | " non" | 0.0876 |
 
 ### Table v2
 
-|                           | Iter 1  | Iter 2 | Iter 3 | 
-|---------------------------|---------|--------|--------|
-| **Selection (token)**     |  *The*  | *Aqu* | *arium* | 
-| **Selection (encoding)**  | *01* | *10* | *n/a* |
-| **Cumulative encoding**   |  *01* | *0110* | *0110* |
-|                           |      |      |       |
-| **Index (encoding 2-bit)** | *encoded*  | *encoded* | *accepted* |
-| **0 (00)** | " It": 0.2958 | " aqu": 0.4469 | **"arium": 0.9999** |
-| **1 (01)** | **" The": 0.26917** |  " New": 0.4136 | "ari": < 1e-4 |
-| **2 (10)** | " This": 0.1813 | **" Aqu": 0.1020** | "aram": < 1e-4 |
-| **3 (11)** | " Loc": 0.0318 | " Boston": 0.006 | "a": < 1e-4 |
+|                           | Iter 1  | Iter 2 | Iter 3 | Iter 4 | Iter 5 | Iter 6 |
+|---------------------------|---------|--------|--------|--------|--------|--------|
+| **Selection (token)**     |  *The*  | *Aqu* | *arium* | *is* | *a* | *world* |
+| **Selection (encoding)**  | *01* | *10* | *n/a* | *n/a* | *10* | *00* |
+| **Cumulative encoding**   |  *01* | *0110* | *0110* | *0110* | *011010* | *01101000* |
+|                           |      |      |       |      |      |       |
+| **Index (encoding 2-bit)** | *encoded*  | *encoded* | *accepted* | *accepted* | *encoded* | *encoded* |
+| **0 (00)** | " It": 0.2958 | " aqu": 0.4469 | **"arium": 0.9999** | **" is": 0.8619** | " located": 0.4782 | **" world": 0.1646** |
+| **1 (01)** | **" The": 0.26917** |  " New": 0.4136 | "ari": < 1e-4 | " has": 0.0591 | " home": 0.2787 | " global": 0.1238 |
+| **2 (10)** | " This": 0.1813 | **" Aqu": 0.1020** | "aram": < 1e-4 | " features": 0.0182 | **" a": 0.0926** | " must": 0.0958 |
+| **3 (11)** | " Loc": 0.0318 | " Boston": 0.006 | "a": < 1e-4 | " offers": 0.0164 | " one": 0.0540 | " non": 0.0876 |
 
 ### Already Filled Data (examples)
 ---
