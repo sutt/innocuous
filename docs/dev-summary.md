@@ -89,6 +89,8 @@ After the refactor, several additional features were:
 - Updated the pyproject configs for building package.
 - Introduced dedicated tests directory.
 
+To view the complete transcript of the interactive refactor claude code session see this [gist](https://gist.github.com/sutt/66eeb6a3b4d293262ae45f74f0dc632d).
+
 Note: some commits are updating neither `stego_llm/` ("src diffs") nor `tests/` ("test diffs") but instead updating `docs/` or `examples/` so they are showing +0/-0 diffs.
 
 
