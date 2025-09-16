@@ -67,5 +67,45 @@ def test_mock_llm_simulation(mocker):
     print(f"output: {output}")
 
 
+def test_encode_decode_simulation(mocker):
+    """Tests encode/decode cycle with mock LLM."""
+    mocker.patch(
+        "stego_llm.llm.interface.create_llm_client", new=mock_create_llm_client
+    )
+    mocker.patch(
+        "stego_llm.llm.interface.get_token_probabilities",
+        new=mock_get_token_probabilities,
+    )
+
+    # We need to import these after patching
+    from stego_llm.core import main_encode, main_decode
+
+    initial_prompt = "The secret to life is"
+    secret_message = b"42"
+    chunk_size = 2
+
+    print(f"\ninitial_prompt: '{initial_prompt}'")
+    print(f"secret_message: {secret_message}")
+
+    encoded_prompt = main_encode(
+        initial_prompt,
+        secret_message,
+        chunk_size=chunk_size,
+    )
+
+    assert encoded_prompt is not None
+    assert encoded_prompt != initial_prompt
+    print(f"encoded_prompt: '{encoded_prompt}'")
+
+    decoded_message = main_decode(
+        encoded_prompt,
+        initial_prompt,
+        chunk_size=chunk_size,
+    )
+
+    print(f"decoded_message: {decoded_message}")
+    assert decoded_message == secret_message
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-s", "-vv"])
