@@ -1,6 +1,7 @@
 """Mock objects for LLM simulation."""
+
 import numpy as np
-from typing import Dict
+from typing import Callable, Dict
 
 _MOCK_LOGPROBS = np.linspace(-0.1, -10.0, 500, dtype=np.float32)
 np.random.default_rng(0).shuffle(_MOCK_LOGPROBS)
@@ -28,23 +29,61 @@ def mock_create_llm_client(model_path=None, **llm_options):
 
 
 def proc_gen_tokens(iter_num: int, num_logprobs: int) -> Dict[str, np.float32]:
-    """Procedurally generates tokens and log probabilities."""
+    """
+    Procedurally generates tokens and log probabilities.
+    e.g. a1, a2, ... a50, b1, b2, ... b50, ..., aa1, aa2, ...
+    note: does not return logit values sorted in desc order (as non-mock-obj does)
+    """
     iter_prefix = _int_to_excel_col(iter_num)
     tokens = {}
     for i in range(num_logprobs):
-        token_str = f" {iter_prefix}{i+1}"
+        token_str = f" {iter_prefix}{i + 1}"
         logprob_idx = (iter_num * num_logprobs + i) % len(_MOCK_LOGPROBS)
         tokens[token_str] = _MOCK_LOGPROBS[logprob_idx]
     return tokens
 
 
-def mock_get_token_probabilities(llm, prompt, num_output=10):
-    """Mock for get_token_probabilities."""
-    if not isinstance(llm, MockLlama):
-        raise TypeError(
-            "llm must be a MockLlama instance for mock_get_token_probabilities"
-        )
+def proc_gen_tokens_v2(iter_num: int, num_logprobs: int) -> Dict[str, np.float32]:
+    """
+    Procedurally generates tokens and log probabilities.
+    e.g. Aa, Ab, ... Aax, Ba, Bb, ..., Bax, ..., AAa, AAb, ...
+    note: does not return logit values sorted in desc order (as non-mock-obj does)
+    """
+    iter_prefix = _int_to_excel_col(iter_num)
+    tokens = {}
+    for i in range(num_logprobs):
+        rank_suffix = _int_to_excel_col(i)
+        token_str = f" {iter_prefix.upper()}{rank_suffix.lower()}"
+        logprob_idx = (iter_num * num_logprobs + i) % len(_MOCK_LOGPROBS)
+        tokens[token_str] = _MOCK_LOGPROBS[logprob_idx]
+    return tokens
 
-    logprobs = proc_gen_tokens(llm.counter, num_output)
-    llm.counter += 1
-    return logprobs
+
+def create_mock_get_token_probabilities(
+    version: int = 1,
+) -> Callable[[MockLlama, str, int], Dict[str, np.float32]]:
+    """
+    Factory for mocks of get_token_probabilities.
+    Pass version for which simulated tokens you want in your test.
+    """
+
+    def mock_func(llm, prompt, num_output=10):
+        if not isinstance(llm, MockLlama):
+            raise TypeError(
+                "llm must be a MockLlama instance for mock_get_token_probabilities"
+            )
+
+        if version == 1:
+            logprobs = proc_gen_tokens(llm.counter, num_output)
+        elif version == 2:
+            logprobs = proc_gen_tokens_v2(llm.counter, num_output)
+        else:
+            raise TypeError(
+                f"create_mock_get_token_probabilities version: {version} not recognized."
+            )
+
+        llm.counter += 1
+
+        return logprobs
+
+    return mock_func
