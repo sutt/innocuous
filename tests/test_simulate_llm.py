@@ -17,6 +17,11 @@ def _int_to_excel_col(n: int) -> str:
     return name
 
 
+def override_filter(toks):
+    """override filter funcs by returning input unchanged; useful for tests"""
+    return toks
+
+
 def test_mock_llm_simulation(mocker):
     """Tests the mock LLM simulation by inferring ten tokens."""
     mocker.patch(
@@ -69,17 +74,49 @@ def test_mock_llm_simulation(mocker):
 
 def test_encode_decode_simulation(mocker):
     """Tests encode/decode cycle with mock LLM."""
+    
+    # Patch where function is looked up, not where it is defined
+    # so target core.{encoder,decoder} not llm.interface
     mocker.patch(
-        "stego_llm.llm.interface.create_llm_client", new=mock_create_llm_client
+        "stego_llm.core.encoder.create_llm_client",
+        new=mock_create_llm_client
     )
     mocker.patch(
-        "stego_llm.llm.interface.get_token_probabilities",
+        "stego_llm.core.encoder.get_token_probabilities",
         new=mock_get_token_probabilities,
+    )
+    mocker.patch(
+        "stego_llm.core.decoder.create_llm_client",
+        new=mock_create_llm_client
+    )
+    mocker.patch(
+        "stego_llm.core.decoder.get_token_probabilities",
+        new=mock_get_token_probabilities,
+    )
+    
+    # These patches are nec b/c mock keys all have numbers in them
+    # which causes them all to be filtered out by default
+    mocker.patch(
+        "stego_llm.core.encoder.pre_selection_filter",
+        new=override_filter,
+    )
+    mocker.patch(
+        "stego_llm.core.encoder.post_selection_filter",
+        new=override_filter,
+    )
+    mocker.patch(
+        "stego_llm.core.decoder.pre_selection_filter",
+        new=override_filter,
+    )
+    mocker.patch(
+        "stego_llm.core.decoder.post_selection_filter",
+        new=override_filter,
     )
 
     # We need to import these after patching
     from stego_llm.core import main_encode, main_decode
 
+    # Core test logic
     initial_prompt = "The secret to life is"
     secret_message = b"42"
     chunk_size = 2
