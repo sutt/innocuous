@@ -37,6 +37,8 @@ def test_mock_llm_simulation(mocker):
     num_inferences = 10
     num_logprobs = 50
 
+    output = ""
+
     for i in range(num_inferences):
         logprobs = get_token_probabilities(llm, f"prompt {i}", num_output=num_logprobs)
 
@@ -50,8 +52,20 @@ def test_mock_llm_simulation(mocker):
             assert isinstance(logprob_val, np.float32)
             assert -10.0 <= logprob_val <= -0.1
 
+        _tokens = list(logprobs.items())
+        _top_token = _tokens[0]
+        # debugging
+        # print(f"=== iter={i}")
+        # print(_tokens[:3])
+        # print("...")
+        # print(_tokens[-3:])
+
+        output += _top_token[0]
+
     assert llm.counter == num_inferences
+    
+    print(f"output: {output}")
 
 
 if __name__ == "__main__":
-    pytest.main([__file__, "-s"])
+    pytest.main([__file__, "-s", "-vv"])
