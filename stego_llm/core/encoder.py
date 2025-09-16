@@ -11,6 +11,7 @@ from stego_llm.llm import (
     get_token_probabilities,
     logits_to_probabilities,
 )
+from stego_llm.log import get_logger, reset_logger
 from .trace import _trace_encoding_step
 
 
@@ -24,6 +25,7 @@ def main_encode(
     num_logprobs: int = 100,
     llm_path: Optional[str] = None,
     llm_extra_args: Dict[str, Any] = {},
+    log_file: Optional[str] = None,
 ) -> str:
     """Encodes a message into a text using steganography.
 
@@ -39,10 +41,15 @@ def main_encode(
         llm_path (Optional[str]): The path to the language model file.
             If None, the default model is used.
         llm_extra_args (Optional Dict): additional args to pass to llama_cpp constructor.
+        log_file (Optional[str]): Path to dump log file.
 
     Returns:
         str: The generated text with the message embedded within it.
     """
+    if log_file:
+        reset_logger()
+        stego_logger = get_logger()
+
     llm = create_llm_client(model_path=llm_path, **llm_extra_args)
     enc_ints = message_to_chunks(msg, chunk_size=chunk_size)
     current_prompt = initial_prompt
@@ -53,6 +60,8 @@ def main_encode(
         )
         toks = logits_to_probabilities(toks)
         _trace_encoding_step("tokens_processed", toks=toks)
+        if log_file:
+            stego_logger.add_step(toks)
 
         toks = pre_selection_filter(toks)
         _trace_encoding_step("pre_filter", before=num_logprobs, after=len(toks))
@@ -73,4 +82,6 @@ def main_encode(
         current_prompt += current_tok
 
     _trace_encoding_step("encoding_complete", prompt=current_prompt)
+    if log_file:
+        stego_logger.dump(log_file)
     return current_prompt

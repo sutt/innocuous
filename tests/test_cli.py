@@ -181,3 +181,42 @@ def test_check_llm_verbose(mocker):
     mock_check_llm.assert_called_once()
     assert mock_check_llm.call_args.kwargs["llm_path"] is None
     assert mock_check_llm.call_args.kwargs["verbose"]
+
+
+def test_encode_log_file_default(mocker):
+    """Test encode with --log-file flag and default path."""
+    mocker.patch("sys.argv", ["innocuous", "encode", "--text", "hello", "--log-file"])
+    mock_main_encode = mocker.patch("stego_llm.cli.main_encode", return_value="encoded")
+    mocker.patch("builtins.print")
+
+    cli.main()
+
+    mock_main_encode.assert_called_once()
+    assert mock_main_encode.call_args.kwargs["log_file"] == "innocuous.log"
+
+
+def test_encode_log_file_custom(mocker):
+    """Test encode with --log-file flag and custom path."""
+    mocker.patch(
+        "sys.argv",
+        ["innocuous", "encode", "--text", "hello", "--log-file", "my_log.json"],
+    )
+    mock_main_encode = mocker.patch("stego_llm.cli.main_encode", return_value="encoded")
+    mocker.patch("builtins.print")
+
+    cli.main()
+
+    mock_main_encode.assert_called_once()
+    assert mock_main_encode.call_args.kwargs["log_file"] == "my_log.json"
+
+
+def test_encode_log_file_not_present(mocker):
+    """Test encode without --log-file flag."""
+    mocker.patch("sys.argv", ["innocuous", "encode", "--text", "hello"])
+    mock_main_encode = mocker.patch("stego_llm.cli.main_encode", return_value="encoded")
+    mocker.patch("builtins.print")
+
+    cli.main()
+
+    mock_main_encode.assert_called_once()
+    assert mock_main_encode.call_args.kwargs["log_file"] is None

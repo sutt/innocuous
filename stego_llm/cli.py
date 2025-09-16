@@ -19,6 +19,13 @@ def main():
     parser.add_argument(
         "-v", "--verbose", action="count", default=0, help="Increase verbosity"
     )
+    parser.add_argument(
+        "--log-file",
+        nargs="?",
+        const="innocuous.log",
+        default=None,
+        help="Enable logging and optionally specify log file path. Defaults to innocuous.log.",
+    )
     parser.add_argument("--llm-path", type=Path, help="Path to LLM GGUF file")
     parser.add_argument(
         "--chunk-size", type=int, default=2, help="Chunk size for encoding/decoding"
@@ -93,6 +100,7 @@ def main():
             chunk_size=args.chunk_size,
             num_logprobs=args.num_logprobs,
             llm_path=args.llm_path,
+            log_file=args.log_file,
         )
         print(encoded_message)
 
