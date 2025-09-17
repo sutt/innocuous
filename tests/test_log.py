@@ -3,6 +3,11 @@ import numpy as np
 from stego_llm.log import get_logger, reset_logger
 
 
+def _zep(num: float):
+    """test util to do float casting"""
+    return float(np.float32(num))
+
+
 def test_stego_logger(tmp_path):
     """Test StegoLogger functionality."""
     reset_logger()
@@ -14,8 +19,7 @@ def test_stego_logger(tmp_path):
     logits1 = {"tokA": np.float32(0.22), "tokB": np.float32(0.11)}
     logger.add_step(logits1)
     assert logger.step_count == 1
-    expected_data_1 = {0: {"top_logits": {"tokA": 0.22, "tokB": 0.11}}}
-    # Comparing floats can be tricky, but these should be exact.
+    expected_data_1 = {0: {"top_logits": {"tokA": _zep(0.22), "tokB": _zep(0.11)}}}
     assert logger.get_log_data() == expected_data_1
 
     # Step 1
@@ -23,12 +27,12 @@ def test_stego_logger(tmp_path):
     logger.add_step(logits2)
     assert logger.step_count == 2
     expected_data_2 = {
-        0: {"top_logits": {"tokA": 0.22, "tokB": 0.11}},
-        1: {"top_logits": {"tokC": 0.33, "tokD": 0.44}},
+        0: {"top_logits": {"tokA": _zep(0.22), "tokB": _zep(0.11)}},
+        1: {"top_logits": {"tokC": _zep(0.33), "tokD": _zep(0.44)}},
     }
     assert logger.get_log_data() == expected_data_2
 
-    # Test dump
+    # # Test dump
     log_file = tmp_path / "test.log"
     logger.dump(str(log_file))
 
@@ -39,12 +43,12 @@ def test_stego_logger(tmp_path):
     loaded_data_int_keys = {int(k): v for k, v in loaded_data.items()}
     assert loaded_data_int_keys == expected_data_2
 
-    # Test singleton behavior
+    # # Test singleton behavior
     logger2 = get_logger()
     assert logger is logger2
     assert logger2.step_count == 2
 
-    # Test reset
+    # # Test reset
     reset_logger()
     logger3 = get_logger()
     assert logger is not logger3

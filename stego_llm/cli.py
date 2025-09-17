@@ -24,7 +24,7 @@ def main():
         nargs="?",
         const="innocuous.log",
         default=None,
-        help="Enable logging and optionally specify log file path. Defaults to innocuous.log.",
+        help="Enable logging and optionally specify log file path. Defaults to innocuous.log if '--' is supplied as arg",
     )
     parser.add_argument("--llm-path", type=Path, help="Path to LLM GGUF file")
     parser.add_argument(
