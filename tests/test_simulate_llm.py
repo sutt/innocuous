@@ -236,5 +236,73 @@ def test_encode_decode_simulation_v2(mocker):
     assert decoded_message == secret_message
 
 
+def test_encode_decode_simulation_v3(mocker):
+    """Tests encode/decode cycle with mock LLM with mock_tokens_v3"""
+
+    mocker.patch("stego_llm.core.encoder.create_llm_client", new=mock_create_llm_client)
+    mocker.patch(
+        "stego_llm.core.encoder.get_token_probabilities",
+        new=create_mock_get_token_probabilities(
+            version=3, log_file="visit-boston-1.log"
+        ),
+    )
+    mocker.patch("stego_llm.core.decoder.create_llm_client", new=mock_create_llm_client)
+    mocker.patch(
+        "stego_llm.core.decoder.get_token_probabilities",
+        new=create_mock_get_token_probabilities(
+            version=3, log_file="visit-boston-1.log"
+        ),
+    )
+
+    # These patches are nec b/c mock keys all have numbers in them
+    # which causes them all to be filtered out by default
+    mocker.patch(
+        "stego_llm.core.encoder.pre_selection_filter",
+        new=override_filter,
+    )
+    mocker.patch(
+        "stego_llm.core.encoder.post_selection_filter",
+        new=override_filter,
+    )
+    mocker.patch(
+        "stego_llm.core.decoder.pre_selection_filter",
+        new=override_filter,
+    )
+    mocker.patch(
+        "stego_llm.core.decoder.post_selection_filter",
+        new=override_filter,
+    )
+
+    # We need to import these after patching
+    from stego_llm.core import main_encode, main_decode
+
+    # Core test logic
+    initial_prompt = "The secret to life is"
+    secret_message = b"42"
+    chunk_size = 2
+
+    print(f"\ninitial_prompt: '{initial_prompt}'")
+    print(f"secret_message: {secret_message}")
+
+    encoded_prompt = main_encode(
+        initial_prompt,
+        secret_message,
+        chunk_size=chunk_size,
+    )
+
+    assert encoded_prompt is not None
+    assert encoded_prompt != initial_prompt
+    print(f"encoded_prompt: '{encoded_prompt}'")
+
+    decoded_message = main_decode(
+        encoded_prompt,
+        initial_prompt,
+        chunk_size=chunk_size,
+    )
+
+    print(f"decoded_message: {decoded_message}")
+    assert decoded_message == secret_message
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-s", "-vv"])

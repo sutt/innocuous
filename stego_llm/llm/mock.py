@@ -2,6 +2,9 @@
 
 import numpy as np
 from typing import Callable, Dict
+import os
+import warnings
+from stego_llm.log import get_logger
 
 _MOCK_LOGPROBS = np.linspace(-0.1, -10.0, 500, dtype=np.float32)
 np.random.default_rng(0).shuffle(_MOCK_LOGPROBS)
@@ -59,8 +62,30 @@ def proc_gen_tokens_v2(iter_num: int, num_logprobs: int) -> Dict[str, np.float32
     return tokens
 
 
+def proc_gen_tokens_v3(iter_num: int, num_logprobs: int) -> Dict[str, np.float32]:
+    """
+    Loads tokens and log probabilities from a log file.
+    """
+    logger = get_logger()
+    log_data = logger.get_log_data()
+
+    if iter_num not in log_data:
+        raise IndexError(f"Log data not found for step {iter_num}")
+
+    all_logprobs = log_data[iter_num]["top_logits"]
+
+    if num_logprobs > len(all_logprobs):
+        warnings.warn(
+            f"Requested {num_logprobs} logprobs, but only {len(all_logprobs)} available. "
+            "Returning all available logprobs."
+        )
+        return all_logprobs
+
+    return dict(list(all_logprobs.items())[:num_logprobs])
+
+
 def create_mock_get_token_probabilities(
-    version: int = 1,
+    version: int = 1, log_file: str = None
 ) -> Callable[[MockLlama, str, int], Dict[str, np.float32]]:
     """
     Factory for mocks of get_token_probabilities.

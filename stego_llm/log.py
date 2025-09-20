@@ -21,6 +21,24 @@ class StegoLogger:
         with open(filepath, "w") as f:
             json.dump(self.log_data, f, indent=4)
 
+    def load(self, filepath: str):
+        """Loads log data from a file."""
+        with open(filepath, "r") as f:
+            raw_data = json.load(f)
+
+        transformed_data = {}
+        for step, data in raw_data.items():
+            probs = data["top_logits"]
+            logprobs = {
+                token: np.float32(np.log(prob))
+                for token, prob in probs.items()
+                if prob > 0
+            }
+            transformed_data[int(step)] = {"top_logits": logprobs}
+
+        self.log_data = transformed_data
+        self.step_count = len(self.log_data)
+
     def get_log_data(self):
         """Returns the log data."""
         return self.log_data
