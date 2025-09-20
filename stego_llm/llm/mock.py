@@ -91,6 +91,16 @@ def create_mock_get_token_probabilities(
     Factory for mocks of get_token_probabilities.
     Pass version for which simulated tokens you want in your test.
     """
+    if version == 3:
+        if not log_file:
+            raise ValueError("log_file must be provided for version 3")
+
+        from stego_llm.log import reset_logger
+
+        reset_logger()
+        logger = get_logger()
+        log_path = os.path.join("tests", "data", "recorded-logits", log_file)
+        logger.load(log_path)
 
     def mock_func(llm, prompt, num_output=10):
         if not isinstance(llm, MockLlama):
@@ -102,6 +112,8 @@ def create_mock_get_token_probabilities(
             logprobs = proc_gen_tokens(llm.counter, num_output)
         elif version == 2:
             logprobs = proc_gen_tokens_v2(llm.counter, num_output)
+        elif version == 3:
+            logprobs = proc_gen_tokens_v3(llm.counter, num_output)
         else:
             raise TypeError(
                 f"create_mock_get_token_probabilities version: {version} not recognized."
