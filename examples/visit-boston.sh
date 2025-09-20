@@ -10,9 +10,9 @@
 innocuous \
     --initial-prompt-text "A great place to visit in boston is the New England Aquarium." \
     --chunk-size 2 \
-    --num-logprobs 8 \
+    --num-logprobs 100 \
     -vv \
-    --log-file boston.log \
+    --log-file ./tests/data/recorded-logits/visit-boston-1.log \
     encode \
     --text "hey"
 
