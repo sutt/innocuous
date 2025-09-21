@@ -185,7 +185,9 @@ def test_check_llm_verbose(mocker):
 
 def test_encode_log_file_default(mocker):
     """Test encode with --log-file flag and default path."""
-    mocker.patch("sys.argv", ["innocuous", "--log-file", "--", "encode", "--text", "hello"])
+    mocker.patch(
+        "sys.argv", ["innocuous", "--log-file", "--", "encode", "--text", "hello"]
+    )
     mock_main_encode = mocker.patch("stego_llm.cli.main_encode", return_value="encoded")
     mocker.patch("builtins.print")
 

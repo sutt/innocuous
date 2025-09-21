@@ -254,31 +254,11 @@ def test_encode_decode_simulation_v3(mocker):
         ),
     )
 
-    # These patches are nec b/c mock keys all have numbers in them
-    # which causes them all to be filtered out by default
-    mocker.patch(
-        "stego_llm.core.encoder.pre_selection_filter",
-        new=override_filter,
-    )
-    mocker.patch(
-        "stego_llm.core.encoder.post_selection_filter",
-        new=override_filter,
-    )
-    mocker.patch(
-        "stego_llm.core.decoder.pre_selection_filter",
-        new=override_filter,
-    )
-    mocker.patch(
-        "stego_llm.core.decoder.post_selection_filter",
-        new=override_filter,
-    )
-
-    # We need to import these after patching
     from stego_llm.core import main_encode, main_decode
 
     # Core test logic
-    initial_prompt = "The secret to life is"
-    secret_message = b"42"
+    initial_prompt = "A great place to visit in boston is the New England Aquarium."
+    secret_message = b"hey"
     chunk_size = 2
 
     print(f"\ninitial_prompt: '{initial_prompt}'")
