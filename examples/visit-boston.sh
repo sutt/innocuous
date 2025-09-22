@@ -8,7 +8,7 @@
 # A great place to visit in boston is  The New England Aquarium is a must for anyone interested in marine life. With various exhibits showcasing different
 
 innocuous \
-    --initial-prompt-text "A great place to visit in boston is the New England Aquarium." \
+    --initial-prompt-text $'A great place to visit in boston is the New England Aquarium.' \
     --chunk-size 2 \
     --num-logprobs 100 \
     -vv \

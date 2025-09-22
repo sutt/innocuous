@@ -48,7 +48,7 @@ We'll run the cli script:
 
 ```bash
 innocuous \
-    --initial-prompt-text 'Below is an iambic penatameter poem. Complete it:\nThe king' \
+    --initial-prompt-text $'Below is an iambic penatameter poem. Complete it:\nThe king' \
     --check_size 3 \
     encode --btc-addr '12Wfw4L3oPJFk2q6osDoZLYAwdFkhvgt4E' \
 ```
@@ -73,6 +73,8 @@ innocuous \
 > What word shall end this royal verse  
 > And grant my pen its rightful due  
 
+> [!TIP]
+> Using the **`$`** symbol in `--initial-prompt-text $'...'` allows the line carriage (`\n`) inside the string to be read correctly from command line.
 
 **Of course an llm can create any type of content, not just poems about kings; this is just an example of one type generated text.**
 
@@ -161,7 +163,7 @@ Run the following command:
 
 ```bash
 innocuous \
-    --initial-prompt-text 'Below is an iambic penatameter poem. Complete it:\nThe king' \
+    --initial-prompt-text $'Below is an iambic penatameter poem. Complete it:\nThe king' \
     --check_size 3 \
     encode --text 'hello world' \
 ```
