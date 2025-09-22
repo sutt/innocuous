@@ -60,15 +60,30 @@ def gen_logits_for_tests():
     print("gen_logit complete.")
 
 
-def test_gen_0(mocker):
-    """Tests encode/decode cycle with a particular logfile and saved arguments"""
+@pytest.mark.parametrize(
+    "schedule_key",
+    [
+        "0",
+        "2",
+        "3",
+    ],
+)
+def test_mocked_enc_dec(mocker, schedule_key):
+    """
+    Tests encode/decode cycle with a particular logfile and saved arguments
+    No backtracking hits in decoder for these items
+    """
 
-    # Select which replay logfile and arguments you'll use:
-    key = "0"
-    enc_args = GEN_SCHEDULE[key]
-    log_file = enc_args["log_file"]
-    log_file = os.path.basename(log_file)
+    # From test parameter `schedule_key`, load relevant info from schedule:
+    enc_args = GEN_SCHEDULE[schedule_key]
 
+    # Extract relevant data
+    log_file = os.path.basename(enc_args["log_file"])
+    initial_prompt = enc_args["initial_prompt"]
+    secret_message = enc_args["msg"]
+    chunk_size = enc_args["chunk_size"]
+
+    # Apply mocks to LLM methods
     mocker.patch("stego_llm.core.encoder.create_llm_client", new=mock_create_llm_client)
     mocker.patch(
         "stego_llm.core.encoder.get_token_probabilities",
@@ -82,10 +97,7 @@ def test_gen_0(mocker):
 
     from stego_llm.core import main_encode, main_decode
 
-    initial_prompt = enc_args["initial_prompt"]
-    secret_message = enc_args["msg"]
-    chunk_size = enc_args["chunk_size"]
-
+    # Main test logic + logging
     print(f"\ninitial_prompt: '{initial_prompt}'")
     print(f"secret_message: {secret_message}")
 
@@ -109,48 +121,36 @@ def test_gen_0(mocker):
     assert decoded_message == secret_message
 
 
-def test_gen_1(mocker):
-    """For adding backtracking accounting to mocks"""
+@pytest.mark.parametrize(
+    "schedule_key",
+    [
+        "1",
+    ],
+)
+def test_mocked_enc_dec_with_backtracking(mocker, schedule_key):
+    """
+    Tests encode/decode cycle with a particular logfile and saved arguments
+    Allow backtracking hits in decoder for these items with more sophisticated mock logic
+    """
 
-    # This is the only scenario where backtracking comes into play
-    key = "1"
-    enc_args = GEN_SCHEDULE[key]
-    log_file = enc_args["log_file"]
-    log_file = os.path.basename(log_file)
+    # From test parameter `schedule_key`, load relevant info from schedule:
+    enc_args = GEN_SCHEDULE[schedule_key]
 
+    # Extract relevant argument data for the methods we're testing and/or mocks
+    log_file = os.path.basename(enc_args["log_file"])
+    initial_prompt = enc_args["initial_prompt"]
+    secret_message = enc_args["msg"]
+    chunk_size = enc_args["chunk_size"]
+
+    # Apply mocks to LLM-encoding methods
     mocker.patch("stego_llm.core.encoder.create_llm_client", new=mock_create_llm_client)
     mocker.patch(
         "stego_llm.core.encoder.get_token_probabilities",
         new=create_mock_get_token_probabilities(version=3, log_file=log_file),
     )
+    from stego_llm.core import main_encode
 
-    from stego_llm.core.trace import _trace_decoding_step as original_trace
-
-    decoder_llm = MockLlama()
-
-    def mock_decoder_create_llm_client(*args, **kwargs):
-        return decoder_llm
-
-    def patched_trace(step_name, **kwargs):
-        if step_name == "branch_deadend":
-            decoder_llm.counter -= 1
-        return original_trace(step_name, **kwargs)
-
-    mocker.patch(
-        "stego_llm.core.decoder.create_llm_client", new=mock_decoder_create_llm_client
-    )
-    mocker.patch(
-        "stego_llm.core.decoder.get_token_probabilities",
-        new=create_mock_get_token_probabilities(version=3, log_file=log_file),
-    )
-    mocker.patch("stego_llm.core.decoder._trace_decoding_step", new=patched_trace)
-
-    from stego_llm.core import main_encode, main_decode
-
-    initial_prompt = enc_args["initial_prompt"]
-    secret_message = enc_args["msg"]
-    chunk_size = enc_args["chunk_size"]
-
+    # Test Logic for encoding portion
     print(f"\ninitial_prompt: '{initial_prompt}'")
     print(f"secret_message: {secret_message}")
 
@@ -160,6 +160,40 @@ def test_gen_1(mocker):
         chunk_size=chunk_size,
     )
 
+    # Helper methods for mocking LLM-decoding methods
+    from stego_llm.core.trace import _trace_decoding_step as original_trace
+
+    decoder_llm = MockLlama()
+
+    def mock_decoder_create_llm_client(*args, **kwargs):
+        return decoder_llm
+
+    def patched_trace(step_name, **kwargs):
+        if step_name == "branch_deadend":
+            # This should work since every time we hit this branch in decoder
+            # we have generated 1 new mock token (and incremented the counter).
+            # But by the decoder's logic, we'll remove that newest token and
+            # regenerate on the previous step. So we need to cancel-out counter
+            # increment side-effect from previous step here by decrementing.
+            # But this might not work for decoding that takes multiple iterations
+            # to discover it needs to backtrack. For more power you can potentially
+            # check how many recursive solve() on the callstack.
+            decoder_llm.counter -= 1
+        return original_trace(step_name, **kwargs)
+
+    # Apply mocks to LLM-decoding methods
+    mocker.patch(
+        "stego_llm.core.decoder.create_llm_client", new=mock_decoder_create_llm_client
+    )
+    mocker.patch(
+        "stego_llm.core.decoder.get_token_probabilities",
+        new=create_mock_get_token_probabilities(version=3, log_file=log_file),
+    )
+    mocker.patch("stego_llm.core.decoder._trace_decoding_step", new=patched_trace)
+
+    from stego_llm.core import main_decode
+
+    # Test logic for decoding portion
     assert encoded_prompt is not None
     assert encoded_prompt != initial_prompt
     print(f"encoded_prompt: '{encoded_prompt}'")
