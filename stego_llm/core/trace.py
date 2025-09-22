@@ -31,6 +31,7 @@ def _trace_decoding_step(step_name, **kwargs):
         "tokens_processed": lambda: f"tokens: {to_json(kwargs['toks'])}",
         "token_accepted": lambda: f"accept_tok hit: {repr(kwargs['token'])} | continuing...",
         "condition_found": lambda: f"condition found: {kwargs['condition']}",
+        "branch_deadend": lambda: f"branch deadend, possible_matches: {kwargs['possible_matches']} | state: {kwargs['state']}",
         "decoding_complete": lambda: f"decoded_ints: {kwargs['decoded_ints']}",
         "decode_failed": lambda: "Failed to decode message.",
     }

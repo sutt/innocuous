@@ -25,6 +25,22 @@ GEN_SCHEDULE = {
         "log_file": "./tests/data/recorded-logits/the-king-2.log",
         # "llm_path": "../mistral-7b-instruct-v0.2.Q4_K_M.gguf",
     },
+    "2": {
+        "initial_prompt": "Below is an iambic penatameter poem. Complete it:\nThe king",
+        "msg": b"groovy baby",
+        "chunk_size": 2,
+        "num_logprobs": 100,
+        "log_file": "./tests/data/recorded-logits/the-king-3.log",
+        # "llm_path": "../mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+    },
+    "3": {
+        "initial_prompt": "Below is an iambic penatameter poem. Complete it:\nThe king",
+        "msg": b"groovy baby",
+        "chunk_size": 3,
+        "num_logprobs": 100,
+        "log_file": "./tests/data/recorded-logits/the-king-4.log",
+        # "llm_path": "../mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+    },
 }
 
 
@@ -35,7 +51,7 @@ def gen_logits_for_tests():
     """
     from stego_llm.core import main_encode, main_decode
 
-    keys = ["0", "1"]
+    keys = list(GEN_SCHEDULE.keys())
     for current_key in keys:
         print(f"generating on key: {current_key}\n=======\n")
         enc_args = GEN_SCHEDULE[current_key]
@@ -93,6 +109,56 @@ def test_gen_0(mocker):
     assert decoded_message == secret_message
 
 
+@pytest.mark.xfail
+def test_gen_1(mocker):
+    """For adding backtracking accounting to mocks"""
+
+    # This is the only scenario where backtracking comes into play
+    key = "1"
+    enc_args = GEN_SCHEDULE[key]
+    log_file = enc_args["log_file"]
+    log_file = os.path.basename(log_file)
+
+    mocker.patch("stego_llm.core.encoder.create_llm_client", new=mock_create_llm_client)
+    mocker.patch(
+        "stego_llm.core.encoder.get_token_probabilities",
+        new=create_mock_get_token_probabilities(version=3, log_file=log_file),
+    )
+    mocker.patch("stego_llm.core.decoder.create_llm_client", new=mock_create_llm_client)
+    mocker.patch(
+        "stego_llm.core.decoder.get_token_probabilities",
+        new=create_mock_get_token_probabilities(version=3, log_file=log_file),
+    )
+
+    from stego_llm.core import main_encode, main_decode
+
+    initial_prompt = enc_args["initial_prompt"]
+    secret_message = enc_args["msg"]
+    chunk_size = enc_args["chunk_size"]
+
+    print(f"\ninitial_prompt: '{initial_prompt}'")
+    print(f"secret_message: {secret_message}")
+
+    encoded_prompt = main_encode(
+        initial_prompt,
+        secret_message,
+        chunk_size=chunk_size,
+    )
+
+    assert encoded_prompt is not None
+    assert encoded_prompt != initial_prompt
+    print(f"encoded_prompt: '{encoded_prompt}'")
+
+    decoded_message = main_decode(
+        encoded_prompt,
+        initial_prompt,
+        chunk_size=chunk_size,
+    )
+
+    print(f"decoded_message: {decoded_message}")
+    assert decoded_message == secret_message
+
+
 if __name__ == "__main__":
-    # pytest.main([__file__, "-s", "-vv"])
-    gen_logits_for_tests()
+    pytest.main([__file__, "-s", "-vv"])
+    # gen_logits_for_tests()

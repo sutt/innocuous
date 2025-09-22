@@ -115,6 +115,10 @@ def main_decode(
                 solution = [decoded_int] + result
                 memo[state] = solution
                 return solution
+            else:
+                _trace_decoding_step(
+                    "branch_deadend", possible_matches=possible_matches, state=state
+                )
 
         memo[state] = None
         return None
