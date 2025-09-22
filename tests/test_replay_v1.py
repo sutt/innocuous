@@ -109,7 +109,6 @@ def test_gen_0(mocker):
     assert decoded_message == secret_message
 
 
-@pytest.mark.xfail
 def test_gen_1(mocker):
     """For adding backtracking accounting to mocks"""
 
@@ -124,11 +123,27 @@ def test_gen_1(mocker):
         "stego_llm.core.encoder.get_token_probabilities",
         new=create_mock_get_token_probabilities(version=3, log_file=log_file),
     )
-    mocker.patch("stego_llm.core.decoder.create_llm_client", new=mock_create_llm_client)
+
+    from stego_llm.core.trace import _trace_decoding_step as original_trace
+
+    decoder_llm = MockLlama()
+
+    def mock_decoder_create_llm_client(*args, **kwargs):
+        return decoder_llm
+
+    def patched_trace(step_name, **kwargs):
+        if step_name == "branch_deadend":
+            decoder_llm.counter -= 1
+        return original_trace(step_name, **kwargs)
+
+    mocker.patch(
+        "stego_llm.core.decoder.create_llm_client", new=mock_decoder_create_llm_client
+    )
     mocker.patch(
         "stego_llm.core.decoder.get_token_probabilities",
         new=create_mock_get_token_probabilities(version=3, log_file=log_file),
     )
+    mocker.patch("stego_llm.core.decoder._trace_decoding_step", new=patched_trace)
 
     from stego_llm.core import main_encode, main_decode
 
