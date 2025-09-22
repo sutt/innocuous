@@ -250,7 +250,7 @@ wheels = [
 
 [[package]]
 name = "innocuous"
-version = "0.2.3"
+version = "0.2.4"
 source = { editable = "." }
 dependencies = [
     { name = "llama-cpp-python" },
