@@ -2,7 +2,7 @@
 Utilize these variables below for the task as you read it and process it. The script var will be denoted with $my_script_var when utilized and should be read the value corresponding.
 
 - target_doc: docs/dev-summary.md 
-- version_to_update: v0.2.0
+- version_to_update: v0.2.3
 - max_summary_chars: 250
 - repo_url: github.com/sutt/innocuous
 
@@ -17,7 +17,7 @@ Executing:
 
 ### Command Reference:
 These commands you should not run or pay attention to any of these. They are simply are reference for the developer:
-> git diff --stat v0.1.0 v0.2.0 -- .public-agdocs/specs
+> git diff --stat v0.2.2 v0.2.3 -- .public-agdocs/specs
 > ls -lt .agdocs/specs/ 
 > git log --oneline --no-merges  --not  -n 36
 
@@ -40,16 +40,15 @@ Rules for the table:
 ##### Spec Changes
 Here's the result for the following command:
 
-git diff --stat v0.1.0 v0.2.0 -- .public-agdocs/specs
+git diff --stat v0.2.2 v0.2.3 -- .public-agdocs/specs
 
- .public-agdocs/specs/check-llm.md         |  10 +
- .public-agdocs/specs/cli-add.md           |  25 +
- .public-agdocs/specs/devsummary-task-a.md | 102 ++++
- .public-agdocs/specs/devsummary-task-b.md |  75 +++
- .public-agdocs/specs/fix-tests.md         | 862 ++++++++++++++++++++++++++++++
- .public-agdocs/specs/modelpath-env.md     |   5 +
- .public-agdocs/specs/update-examples.md   | 240 +++++++++
- 7 files changed, 1319 insertions(+)
+ .public-agdocs/specs/cli-numlogprobs.md   |  1 +
+ .public-agdocs/specs/extra-args-test.md   | 92 +++++++++++++++++++++++++++++++
+ .public-agdocs/specs/integration-test.md  |  3 +
+ .public-agdocs/specs/type-main-funcs.md   |  6 ++
+ .public-agdocs/specs/version-cmd.md       |  1 +
+ 7 files changed, 175 insertions(+), 84 deletions(-)
+
 
 
 ##### Specs Time-Sorted
@@ -59,14 +58,11 @@ Results of the command:
 
 ls -lt .agdocs/specs/ 
 
-total 84
--rw-r--r-- 1 user user  4734 Aug 27 09:03 devsummary-task-a.md
--rw-r--r-- 1 user user  7671 Aug 25 22:03 update-examples.md
--rw-r--r-- 1 user user 34787 Aug 25 21:12 fix-tests.md
--rw-r--r-- 1 user user   620 Aug 25 21:03 check-llm.md
--rw-r--r-- 1 user user   290 Aug 25 20:59 modelpath-env.md
--rw-r--r-- 1 user user  3554 Aug 25 17:43 devsummary-task-b.md
--rw-r--r-- 1 user user  1322 Aug 25 11:14 cli-add.md
+-rw-r--r-- 1 user user  3348 Sep 11 12:10 extra-args-test.md
+-rw-r--r-- 1 user user    81 Sep 11 08:32 cli-numlogprobs.md
+-rw-r--r-- 1 user user   251 Sep  4 16:26 integration-test.md
+-rw-r--r-- 1 user user   169 Sep  3 19:16 type-main-funcs.md
+-rw-r--r-- 1 user user   104 Sep  3 18:46 version-cmd.md
 
 
 ##### Commit Logs
@@ -74,28 +70,22 @@ Here's the output of the following command, use this to link a solution sha to a
 
 git log --oneline --no-merges  --not  -n 36
 
-be74868 build: v0.2.0
-466af55 specs: v0.2.0
-e7b8d5b feat: add configurable LLM path and check-llm command
-3dbcef6 fix: fixups and env example
-0355954 feat: add check-llm subcommand to validate LLM configuration
-c7cdd56 test: remove mock for moved create_llm_client function
-010e17d fix: remove hardcoded model_path
-55cf7ce feat: allow specifying LLM path via CLI arg or env var
-6b3f7b0 format: ruff format for previous
-36d836d fix: hardcode prompt for cli + test_cli configs
-0cb642f feat: add innocuous command-line interface
-0738198 build: update uv.lock for new pkg structure
-447bb3b tests: create first demo test
-42449fb refactor: ruff format applied (first time)
-0f6c89d refactor: remove jupyter notebooks and notepad scripts
-40eab8c refactor: manually unnec modules and funcs from new package structure
-78770d5 refactor: another major pkg refactor
-fa88e0b refactor: major package refactor (claude)
-c10a969 refactor: move logging to central trace function (claude)
-d3321ed feat: impl devsummary-task-b with claude (agro auto-commit)
-d405351 docs: manual updates to dev-summary v0.1.0
-9f91a82 feat: impl devsummary-task-a with claude (agro auto-commit)
-38062ca docs: add dev-summary template
-6d8eafd specs: v0.1.0
-
+04d2537 build: v0.2.3
+222a1ca specs: v0.2.3
+f01571c docs: update dev-summary for 0.2.1 and 0.2.2
+b7c73e9 refactor: ruff format
+9abdb61 test: add tests for llm_extra_args passthrough
+2f85f37 feat: adding llm_extra_args for use in library functions
+deac5b5 refactor: llama logging override now wrapped as function
+77a030d refactor: cli arguments --chunk-size
+cbc0de0 refactor: logging enables info level, repr of output for -v mode.
+fe8dbf6 feat: add --num-logprobs argument to CLI
+313efe3 fix: cli defaults to chunk_size=2 (aligns with library method defaults)
+5b23579 feat: decoder fills in missing auto_accept tokens + debugging trace for decoder
+711aea0 test: add sleep + gc fixture to integration test setup
+f57aea1 test: refactor previous test, add decoder-only integration test
+6203b4a test: add integration test for full encode/decode cycle
+ddcd740 fix: add default arg vals
+b00dd60 refactor: add type hints and improve docstrings for core functions
+80791f9 feat: add --version flag and dynamic version loading
+1505e99 build: bump version v0.2.2

@@ -1,0 +1,1 @@
+apply the logic of test_integration:test_encode_decode_integration but apply it in the format of mock llama as seen in the test_simulate_llm so don't actually do llm inference but instead use the mocker. Provide some debugging/ logging outputs as well within this function.

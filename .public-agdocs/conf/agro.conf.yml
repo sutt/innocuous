@@ -57,7 +57,8 @@ AGENT_CONFIG:
     # default claude config
     # args: ["-d", "--allowedTools", "Write Edit MultiEdit", "--max-turns", "30", "-p"]
     # agentic claude for devsummary-task-b
-    args: ["-d", "--allowedTools", "Bash(git:*) Write Edit MultiEdit", "--max-turns", "120", "-p"]
+    # args: ["-d", "--allowedTools", "Bash(git:*) Write Edit MultiEdit", "--max-turns", "120", "-p"]
+    args: ["-d", "--allowedTools", "Bash(uv:*) Bash(git:*) Write Edit MultiEdit", "--max-turns", "120", "-p"]
 #   gemini:
 #     task_file_arg_template: null
 #     args: ["-y"]

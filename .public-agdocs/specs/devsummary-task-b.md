@@ -2,7 +2,7 @@
 Utilize these variables below for the task as you read it and process it. The script var will be denoted with $my_script_var when utilized and should be read the value corresponding.
 
 - target_doc: docs/dev-summary.md 
-- version_to_update: v0.2.0
+- version_to_update: v0.2.3
 - diffs_main_directory: stego_llm
 - diffs_on_other_directories: tests
 
@@ -35,30 +35,25 @@ Rules used to build the table previously:
 
 Reference for commit sha's in the table
 ```
-be74868 build: v0.2.0
-466af55 specs: v0.2.0
-e7b8d5b feat: add configurable LLM path and check-llm command
-3dbcef6 fix: fixups and env example
-0355954 feat: add check-llm subcommand to validate LLM configuration
-c7cdd56 test: remove mock for moved create_llm_client function
-010e17d fix: remove hardcoded model_path
-55cf7ce feat: allow specifying LLM path via CLI arg or env var
-6b3f7b0 format: ruff format for previous
-36d836d fix: hardcode prompt for cli + test_cli configs
-0cb642f feat: add innocuous command-line interface
-0738198 build: update uv.lock for new pkg structure
-447bb3b tests: create first demo test
-42449fb refactor: ruff format applied (first time)
-0f6c89d refactor: remove jupyter notebooks and notepad scripts
-40eab8c refactor: manually unnec modules and funcs from new package structure
-78770d5 refactor: another major pkg refactor
-fa88e0b refactor: major package refactor (claude)
-c10a969 refactor: move logging to central trace function (claude)
-d3321ed feat: impl devsummary-task-b with claude (agro auto-commit)
-d405351 docs: manual updates to dev-summary v0.1.0
-9f91a82 feat: impl devsummary-task-a with claude (agro auto-commit)
-38062ca docs: add dev-summary template
-6d8eafd specs: v0.1.0
+04d2537 build: v0.2.3
+222a1ca specs: v0.2.3
+f01571c docs: update dev-summary for 0.2.1 and 0.2.2
+b7c73e9 refactor: ruff format
+9abdb61 test: add tests for llm_extra_args passthrough
+2f85f37 feat: adding llm_extra_args for use in library functions
+deac5b5 refactor: llama logging override now wrapped as function
+77a030d refactor: cli arguments --chunk-size
+cbc0de0 refactor: logging enables info level, repr of output for -v mode.
+fe8dbf6 feat: add --num-logprobs argument to CLI
+313efe3 fix: cli defaults to chunk_size=2 (aligns with library method defaults)
+5b23579 feat: decoder fills in missing auto_accept tokens + debugging trace for decoder
+711aea0 test: add sleep + gc fixture to integration test setup
+f57aea1 test: refactor previous test, add decoder-only integration test
+6203b4a test: add integration test for full encode/decode cycle
+ddcd740 fix: add default arg vals
+b00dd60 refactor: add type hints and improve docstrings for core functions
+80791f9 feat: add --version flag and dynamic version loading
+1505e99 build: bump version v0.2.2
 ```
 
 
