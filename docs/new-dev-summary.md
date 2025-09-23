@@ -209,3 +209,86 @@ index 9368179..b39e8e0 100644
 </td>
 </tr>
 </table>
+
+
+### No table
+
+<details>
+<summary>Full Spec + Patch</summary>
+<h3>Spec</h3>
+<p>
+refactor decode_main function to deal with the following situation:
+remaining_text may .startswith match with multiple eligible tokens on that iteration.
+</p>
+<p>
+for example, if remaining_text = "all above" and tok.keys() is ["a","go", "all"] there are two matches. Imagine that the encoder chose "all" but the decoder, as it is now written will select "a" since it comes first in iteration. Then on the next step or subsequent steps it will encounter an error.
+</p>
+we likely need a way to do branching, and check 
+note bene: the maxsize of tokens you need to search is the first 2**chunk_size tokens after the tok_filter step.
+note bene: we can apply a hacky solution for now where we don't fully solve it perfectly but try to back-up slighlty and go the other direction. One way to do this could be to go back one or two words (separated by a space) and try again
+<p>
+<h3>Spec2</h3>
+<pre>
+refactor decode_main function to deal with the following situation:
+remaining_text may .startswith match with multiple eligible tokens on that iteration.
+for example, if remaining_text = "all above" and tok.keys() is ["a","go", "all"] there are two matches. Imagine that the encoder chose "all" but the decoder, as it is now written will select "a" since it comes first in iteration. Then on the next step or subsequent steps it will encounter an error.
+we likely need a way to do branching, and check 
+note bene: the maxsize of tokens you need to search is the first 2**chunk_size tokens after the tok_filter step.
+note bene: we can apply a hacky solution for now where we don't fully solve it perfectly but try to back-up slighlty and go the other direction. One way to do this could be to go back one or two words (separated by a space) and try again
+</pre>
+<h3>Patch</h3>
+
+nota bene: Need to keep a space here for the below pre block to render properly
+
+<pre>
+commit 9abdb61deaea959061e62b6d3aae2e73311b26b8
+Author: sutt <wsutton17@gmail.com>
+Date:   Thu Sep 11 12:13:38 2025 -0400
+
+    test: add tests for llm_extra_args passthrough
+
+diff --git a/tests/test_integration.py b/tests/test_integration.py
+index 9368179..b39e8e0 100644
+--- a/tests/test_integration.py
++++ b/tests/test_integration.py
+@@ -6,6 +6,35 @@ import pytest
+ 
+ from stego_llm.core import main_decode, main_encode
+ 
++
++def test_encode_llm_extra_args(mocker):
++    """Test that llm_extra_args are passed to create_llm_client in main_encode."""
++    mock_create_llm = mocker.patch("stego_llm.core.encoder.create_llm_client")
++
++    main_encode(
++        initial_prompt="test",
++        msg=b"",
++        llm_extra_args={"n_ctx": 1024},
++        llm_path="dummy",
++    )
++
++    mock_create_llm.assert_called_once_with(model_path="dummy", n_ctx=1024)
++
++
++def test_decode_llm_extra_args(mocker):
++    """Test that llm_extra_args are passed to create_llm_client in main_decode."""
++    mock_create_llm = mocker.patch("stego_llm.core.decoder.create_llm_client")
++
++    main_decode(
++        encoded_prompt="test",
++        initial_prompt="test",
++        llm_extra_args={"n_ctx": 1024},
++        llm_path="dummy",
++    )
++
++    mock_create_llm.assert_called_once_with(model_path="dummy", n_ctx=1024)
++
++
+ # Get model path from environment variable: preferred and fallabck
+ TEST_LLM_PATH = os.environ.get("INNOCUOUS_TEST_LLM_PATH")
+ if TEST_LLM_PATH is None:
+
+</pre>
+</details>
+
+---
