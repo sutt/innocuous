@@ -1,6 +1,8 @@
 # Dev Summary
 Looks at tasks and associated commit solutions generated each release.
 
+For full specs and patches within the document see [v2-summary](dev-summary-v2.md)
+
 All ai-assistance generated with [Agro](https://github.com/sutt/agro).
 
 ## v0.2.4
@@ -19,6 +21,37 @@ Developing Mock LLM instances that output synthetic tokens (like *Aa, Ba, Ca, ..
 | [mock-llm-test.md](../.public-agdocs/specs/mock-llm-test.md) | Apply the logic of test_integration:test_encode_decode_integration but use mock llama format from test_simulate_llm instead of actual LLM inference. Include debugging/logging outputs. | [b5fbfea](https://github.com/sutt/innocuous/commit/b5fbfea) | +0/-0 | +40/-0 | Needed a vital correction of patch logic in [7501c9d](https://github.com/sutt/innocuous/commit/7501c9d). |
 | [mock-llama-a.md](../.public-agdocs/specs/mock-llama-a.md) | Build sophisticated mock system for Llama object from llama-cpp-python package. Mock create_llm_client and get_token_probabilities methods. Create tests/test_simulate_llm.py with test proving mocking works for ten tokens. | [8d6ed51](https://github.com/sutt/innocuous/commit/8d6ed51) | +50/-0 | +57/-0 | Generates useful bolierplate / exercise type solution |
 | [fill-md-tbl.md](../.public-agdocs/specs/fill-md-tbl.md) | Edit docs/tables/how-it-works-v1.md to add more information to "Table v1" and "Table v2" based on supplied data. Use patterns from "Already Filled Data (examples)" and truncate logprobs to 4 significant digits. | [2cdc0de](https://github.com/sutt/innocuous/commit/2cdc0de) | +0/-0 | +0/-0 | Useful for complex editing within markdown tables.  |
+
+```
+7fcb9fa build: v0.2.4
+339fc3d specs: v0.2.4
+2aee44b docs: show best-practice of $ for cli args
+2fa3147 test: fixup and parametrize replay tests
+62ae7bb test: patch trace to fix mock counter on decoder backtrack
+2afc2f9 feat: adding trace for decode backtrack + added new test assets
+81c856a tests: adding structure of replay tests
+e27ead1 fix: change replay test verbiage
+e52bc8b feat: add support for replaying logits in mock LLM
+85e4859 feat: load logged logits for LLM mocking
+7bd84d9 refactor: add starting assets for loading log file into patch
+72fe613 docs: add log-file results to visit-boston example
+42af87b fix: log-file fixes to tests
+67b22ed feat: add --log-file flag to log token probabilities
+1835f66 test: adding new mock_token method + simulation tests
+7501c9d test: fix patching targets + patch filters for sim tests
+b5fbfea test: simulate encode/decode cycle with mock LLM
+d01d30f test: add dirty debug statements to tests
+8d6ed51 feat: add LLM mock system for testing and simulation
+ec33ed0 docs: add claude transcript link to dev-summary, v0.2.0
+495d488 docs: manual updates to dev-summary v0.2.3
+0df2ddb feat: impl devsummary-task-b with claude (agro auto-commit)
+eb58c66 feat: impl devsummary-task-a with claude (agro auto-commit)
+c0381ea docs: update readme with how-it-works tbl + misc other info
+2cdc0de docs: expand how-it-works example tables
+b8ca9b5 docs: adding example how-it-works markdown tables doc
+4f5c1e1 test: allow no_cleanup tag for integration tests for faster execution
+04d2537 build: v0.2.3
+```
 
 ## v0.2.3
 
