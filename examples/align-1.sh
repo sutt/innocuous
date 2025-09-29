@@ -12,7 +12,7 @@ innocuous \
     --chunk-size 4 \
     --num-logprobs 100 \
     -vv \
-    --log-file ./examples/local-1.log \
+    --log-file ./examples/local-2.log \
     encode \
     --text "h"
 
