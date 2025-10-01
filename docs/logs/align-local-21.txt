@@ -1,0 +1,27 @@
+len(logits): 320000
+vocab size: 32000
+top5 logits:
+[
+  [
+    "\n",
+    16.204227447509766
+  ],
+  [
+    " I",
+    13.833307266235352
+  ],
+  [
+    " Ot",
+    13.596453666687012
+  ],
+  [
+    " Did",
+    13.472517013549805
+  ],
+  [
+    " Here",
+    13.2008695602417
+  ]
+]
+sha256 topp_logits: c2cc6d49c80fbcea848d00cae6fa7c1d7c177e1eab13a1eeb8dba912db10799f
+sha256 full_logits: 69a1a31fb9af2b67f7953b3614e6e04fa8147033a3029bdcb8d004dbaf713f25

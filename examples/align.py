@@ -6,8 +6,8 @@ from llama_cpp import Llama
 # or: INNOCUOUS_LLM_PATH=/path/to/model.gguf uv run examples/align.py
 
 # control inference flags
-for k in ["OMP_NUM_THREADS","OPENBLAS_NUM_THREADS","MKL_NUM_THREADS","VECLIB_MAXIMUM_THREADS","GOTO_NUM_THREADS"]:
-    os.environ.setdefault(k, "1")
+# for k in ["OMP_NUM_THREADS","OPENBLAS_NUM_THREADS","MKL_NUM_THREADS","VECLIB_MAXIMUM_THREADS","GOTO_NUM_THREADS"]:
+#     os.environ.setdefault(k, "1")
 
 # model path setup
 model = os.getenv("INNOCUOUS_LLM_PATH") or (sys.argv[1] if len(sys.argv) > 1 else None)
@@ -21,13 +21,13 @@ prompt = sys.argv[2] if len(sys.argv) > 2 else "Tell me a fun fact about otters.
 
 llm = Llama(
     model_path=model,
-    n_threads=1,
-    n_batch=32,
+    # n_threads=1,
+    # n_batch=32,
     logits_all=True,
-    seed=0,
-    add_bos_token=True,   # affects __call__, not eval()
-    use_mmap=True,
-    verbose=False,        # optional: quiet the “chat format” banner
+    # seed=0,
+    # add_bos_token=True,   # affects __call__, not eval()
+    # use_mmap=True,
+    # verbose=False,        # optional: quiet the “chat format” banner
 )
 
 # IMPORTANT: eval() needs token IDs, not a string

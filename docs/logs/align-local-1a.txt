@@ -1,0 +1,29 @@
+llama_context: n_batch is less than GGML_KQ_MASK_PAD - increasing to 64
+llama_context: n_ctx_per_seq (512) < n_ctx_train (32768) -- the full capacity of the model will not be utilized
+len(logits): 320000
+vocab size: 32000
+top5 logits:
+[
+  [
+    "\n",
+    16.230579376220703
+  ],
+  [
+    " I",
+    13.857940673828125
+  ],
+  [
+    " Ot",
+    13.529010772705078
+  ],
+  [
+    " Did",
+    13.456562042236328
+  ],
+  [
+    " Here",
+    13.195975303649902
+  ]
+]
+sha256 topp_logits: 415bc2d306bc1fb645318f87a12365944735e654ae6f356b5030bac9b02838f7
+sha256 full_logits: da5b6735cdc4e727fd82a694d887931a011ab9e25a17de9cf7476cdba1ed8582
