@@ -111,13 +111,12 @@ def test_decode_example_1():
     """
     GENERATED_TEXT = """
 Below is an iambic penatameter poem. Complete it:
-The king of all the realms did lie there weak,
-With eyes that wept their last goodbye to day,
-The crown did glister by his lifeless cheeks,
-Yet still no heir to
+The king of mighty beasts in royal splendor roves,
+In forests rich in green with grace endowed,
+He roved from morn through twilight and repose,
+A mighty lion in
 """
     GENERATED_TEXT = GENERATED_TEXT.strip()
-    assert GENERATED_TEXT == GENERATED_TEXT
 
     encoded_message = b"hello world"
     initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king"
@@ -147,13 +146,12 @@ def test_decode_example_2():
 
     GENERATED_TEXT_NO_PUNCTUATION = """
 Below is an iambic penatameter poem. Complete it:
-The king of all the realms did lie there weak
-With eyes that wept their last goodbye to day
-The crown did glister by his lifeless cheeks
-Yet still no heir to
+The king of mighty beasts in royal splendor roves
+In forests rich in green with grace endowed
+He roved from morn through twilight and repose
+A mighty lion in
 """
     GENERATED_TEXT_NO_PUNCTUATION = GENERATED_TEXT_NO_PUNCTUATION.strip()
-    assert GENERATED_TEXT_NO_PUNCTUATION == GENERATED_TEXT_NO_PUNCTUATION
 
     encoded_message = b"hello world"
     initial_prompt = "Below is an iambic penatameter poem. Complete it:\nThe king"
