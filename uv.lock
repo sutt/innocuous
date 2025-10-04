@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 
 [[package]]
@@ -277,7 +277,7 @@ publish = [
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", marker = "extra == 'dev'", specifier = ">=6.30.1" },
-    { name = "llama-cpp-python", specifier = ">=0.3.16" },
+    { name = "llama-cpp-python", specifier = "==0.3.16" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.1" },
     { name = "pytest-mock", marker = "extra == 'dev'" },
 ]
