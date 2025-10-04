@@ -12,6 +12,39 @@ dependencies = [
     "llama-cpp-python>=0.3.16",
 ]
 
+[tool.uv]
+# Force a source build for just this package
+no-binary-package = ["llama-cpp-python"]
+
+# Pass scikit-build-core config settings JUST for llama-cpp-python
+# (Use normal TOML tables instead of multi-line inline tables.)
+[tool.uv.config-settings-package]
+[tool.uv."config-settings-package"."llama-cpp-python"]
+"cmake.define.GGML_NATIVE" = "OFF"
+"cmake.define.GGML_OPENMP" = "OFF"
+"cmake.define.GGML_BLAS" = "OFF"
+"cmake.define.GGML_CPU_NO_DISPATCH" = "ON"
+
+"cmake.define.GGML_AVX" = "OFF"
+"cmake.define.GGML_AVX2" = "OFF"
+"cmake.define.GGML_FMA" = "OFF"
+"cmake.define.GGML_F16C" = "OFF"
+"cmake.define.GGML_AVX512" = "OFF"
+
+"cmake.define.CMAKE_BUILD_TYPE" = "Release"
+# "cmake.define.CMAKE_SKIP_RPATH" = "ON"
+# "cmake.define.CMAKE_C_FLAGS" = "-g0 -ffloat-store -fno-unsafe-math-optimizations -ffp-contract=off"
+# "cmake.define.CMAKE_CXX_FLAGS" = "-g0 -ffloat-store -fno-unsafe-math-optimizations -ffp-contract=off"
+# "cmake.define.CMAKE_SHARED_LINKER_FLAGS" = "-Wl,--build-id=none"
+# "cmake.define.CMAKE_MODULE_LINKER_FLAGS" = "-Wl,--build-id=none"
+# "build.tool-args" = "-j1"
+
+
+[tool.uv.pip]
+# If you prefer to scope “no-binary” to uv pip only:
+no-binary = ["llama-cpp-python"]
+
+
 [project.urls]
 Homepage = "https://github.com/sutt/innocuous"
 
