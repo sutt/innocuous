@@ -41,6 +41,14 @@ GEN_SCHEDULE = {
         "log_file": "./tests/data/recorded-logits/the-king-4.log",
         # "llm_path": "../mistral-7b-instruct-v0.2.Q4_K_M.gguf",
     },
+    "4": {
+        "initial_prompt": "Below is an iambic penatameter poem. Complete it:\nThe king",
+        "msg": b"visit boston",
+        "chunk_size": 3,
+        "num_logprobs": 100,
+        "log_file": "./tests/data/recorded-logits/the-king-5.log",
+        # "llm_path": "../mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+    },
 }
 
 
@@ -125,7 +133,7 @@ def test_mocked_enc_dec(mocker, schedule_key):
 @pytest.mark.parametrize(
     "schedule_key",
     [
-        # "1",
+        "4",
     ],
 )
 def test_mocked_enc_dec_with_backtracking(mocker, schedule_key):
