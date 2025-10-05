@@ -164,6 +164,7 @@ def test_mocked_enc_dec_with_backtracking(mocker, schedule_key):
     from stego_llm.core.trace import _trace_decoding_step as original_trace
 
     decoder_llm = MockLlama()
+    patched_trace_call_count = 0
 
     def mock_decoder_create_llm_client(*args, **kwargs):
         return decoder_llm
@@ -178,6 +179,8 @@ def test_mocked_enc_dec_with_backtracking(mocker, schedule_key):
             # But this might not work for decoding that takes multiple iterations
             # to discover it needs to backtrack. For more power you can potentially
             # check how many recursive solve() on the callstack.
+            nonlocal patched_trace_call_count
+            patched_trace_call_count += 1
             decoder_llm.counter -= 1
         return original_trace(step_name, **kwargs)
 
@@ -206,6 +209,12 @@ def test_mocked_enc_dec_with_backtracking(mocker, schedule_key):
 
     print(f"decoded_message: {decoded_message}")
     assert decoded_message == secret_message
+
+    # check if backtracking was actually used in this test
+    # if not, it's not a flaw per-se, but this example can be moved
+    # via (pytest paramters) to `test_mocked_enc_dec` instead.
+    assert patched_trace_call_count > 0
+
 
 
 if __name__ == "__main__":
