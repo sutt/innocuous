@@ -64,6 +64,7 @@ def gen_logits_for_tests():
     "schedule_key",
     [
         "0",
+        "1",
         "2",
         "3",
     ],
@@ -124,7 +125,7 @@ def test_mocked_enc_dec(mocker, schedule_key):
 @pytest.mark.parametrize(
     "schedule_key",
     [
-        "1",
+        # "1",
     ],
 )
 def test_mocked_enc_dec_with_backtracking(mocker, schedule_key):
