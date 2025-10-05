@@ -24,7 +24,9 @@ export SCIKIT_BUILD_CORE_NO_CLEAN=1
 # LLAMA_XXX -> GGML_XXX
 
 # Explicit pip install command
+# use --no-config to avoid taking config from pyproject.toml here
 uv pip install -v \
+  --no-config \
   --no-cache-dir \
   --no-binary=llama-cpp-python \
   --force-reinstall \
