@@ -34,7 +34,24 @@ print(recovered_data)
 
 **So the hidden message within story of the wizard is "`pip install innocuous`"!** How can this be? Read on to find out, or install the package and start using it yourself...
 
-TODO: Maybe add one more example inside a detail tag where message is "the message could be anything".
+<details>
+<summary>Another innocuous coded message: <code>the message could be anything</code></summary>
+
+<br/>
+
+Instead of a wizard fable, hide a short plaintext inside an ordinary botanical field note — the kind of text you might post on a community-garden newsletter. The cover is calm and public; the payload is recoverable with the same prompt and parameters.
+
+```bash
+# inspect the message packing without an LLM
+python examples/innocuous_coded_message.py --dry-run
+
+# full encode → decode round-trip (needs a llama.cpp GGUF)
+python examples/innocuous_coded_message.py --llm-path /path/to/model.gguf
+```
+
+The script encodes the UTF-8 bytes of **`the message could be anything`** into a garden field-note continuation (`chunk_size=2`, `num_logprobs=40`). See [`examples/innocuous_coded_message.py`](./examples/innocuous_coded_message.py).
+
+</details>
 
 ---
 
@@ -78,7 +95,7 @@ innocuous \
 
 **Of course an llm can create any type of content, not just poems about kings; this is just an example of one type generated text.**
 
-For more check the [Showcase](./docs/showcase) section in the docs and the [Example Scripts](./examples).
+For more check the [Showcase](./docs/showcase) section in the docs and the [Example Scripts](./examples) — including the botanical field-note coded message in [`examples/innocuous_coded_message.py`](./examples/innocuous_coded_message.py).
 
 ---
 
