@@ -1,0 +1,17 @@
+{
+  "model_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q5_k_m.gguf",
+  "model_sha256": "041474553fcabfc2a2d67903f9d2c2e50bd92528e670da4f33b5d0ce6e59fd55",
+  "llama_cpp_python_version": "0.3.18",
+  "initial_prompt": "<|im_start|>user\nContinue a friendly seaside walking note in plain English. Describe the lighthouse, the path, gulls, the weather, and a flask of tea.\n<|im_end|>\n<|im_start|>assistant\nThis morning, I followed the path toward the lighthouse",
+  "carrier_text": " at the beach. I saw a small boat with gulls perched on the deck and watching me carefully. The weather was perfect for a day out on the sea with gulls flying overhead. As I approached the lighthouse, I noticed the light was still glowing brightly and I could clearly hear the faint echo as I passed under",
+  "message": "meet at dawn",
+  "chunk_size": 2,
+  "num_logprobs": 100,
+  "llm_extra_args": {
+    "n_ctx": 2048,
+    "n_threads": 4,
+    "n_gpu_layers": 0,
+    "seed": 0,
+    "verbose": false
+  }
+}

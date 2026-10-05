@@ -34,7 +34,42 @@ print(recovered_data)
 
 **So the hidden message within story of the wizard is "`pip install innocuous`"!** How can this be? Read on to find out, or install the package and start using it yourself...
 
-TODO: Maybe add one more example inside a detail tag where message is "the message could be anything".
+<details>
+<summary>A seaside note hiding the message "meet at dawn"</summary>
+
+> This morning, I followed the path toward the lighthouse at the beach. I saw a small boat with gulls perched on the deck and watching me carefully. The weather was perfect for a day out on the sea with gulls flying overhead. As I approached the lighthouse, I noticed the light was still glowing brightly and I could clearly hear the faint echo as I passed under
+
+This is actual output from Innocuous, generated and decoded with
+[Qwen2.5-0.5B-Instruct Q5_K_M](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF),
+`chunk_size=2`, and `num_logprobs=100`. Encoding stops when all the message's
+bits have been embedded, so the passage ends mid-sentence.
+
+The [saved sample](./examples/lighthouse_note.json) contains the exact initial
+prompt (including the model's chat template), carrier continuation, model SHA-256,
+and CPU settings. The [example script](./examples/lighthouse_note.py) verifies
+the model file and checks that decoding recovers `b'meet at dawn'`.
+
+To decode the saved passage from a repository checkout with Python 3.12 or newer:
+
+```bash
+# A C/C++ compiler is needed when installing llama-cpp-python from source.
+CMAKE_ARGS="-DGGML_NATIVE=OFF" CMAKE_BUILD_PARALLEL_LEVEL=4 \
+    python -m pip install "llama-cpp-python==0.3.18"
+python -m pip install -e . --no-deps
+curl --fail --location --output qwen2.5-0.5b-instruct-q5_k_m.gguf \
+    https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q5_k_m.gguf
+python -m examples.lighthouse_note \
+    --llm-path ./qwen2.5-0.5b-instruct-q5_k_m.gguf
+# Recovered message: b'meet at dawn'
+```
+
+To encode and verify a new copy, add `--generate --sample /tmp/lighthouse-note.json`
+to the last command. It saves the sample only after a successful round trip.
+The committed sample was tested on Linux x86-64 CPU with `llama-cpp-python==0.3.18`.
+Token rankings can change with other models, backends, or versions; use the
+recorded settings when reproducing this example.
+
+</details>
 
 ---
 
@@ -182,7 +217,7 @@ initial_prompt = "Write a poem about a puppy:\n"
 
 generated_text = main_encode(
     initial_prompt=initial_prompt,
-    encoded_prompt=message_to_encode.encode("utf-8"),
+    msg=message_to_encode.encode("utf-8"),
     chunk_size=3, num_logprobs=100,
     llm_path="path/to/model.gguf",  # only nec if `INNOCUOUS_LLM_PATH` not set
 )
@@ -293,4 +328,3 @@ Innocuous is very much open-source as all good communication must be: the sender
 - Support for other crypto-currencies addresses.
 
 _Innocuous is built with the help of AI-agent framework [Agro](https://github.com/sutt/agro). Check out the [Dev Summary](./docs/dev-summary.md) to see how the prompts and ai-generation spped up development. And check out the [case-study](https://github.com/sutt/agro/blob/master/docs/case-studies/aba-innocuous-1.md) for a more detailed breakdown of techniques used._ 
-
