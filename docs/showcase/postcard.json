@@ -1,0 +1,19 @@
+{
+  "initial_prompt": "Continue this friendly postcard about a visit to a small railway museum. Use ordinary descriptive prose, without a title or a sign-off.\nDear friend,\nThe old station",
+  "message": "bring tea ☕",
+  "model_filename": "qwen2.5-0.5b-instruct-q5_k_m.gguf",
+  "model_sha256": "041474553fcabfc2a2d67903f9d2c2e50bd92528e670da4f33b5d0ce6e59fd55",
+  "llama_cpp_python": "0.3.16",
+  "chunk_size": 2,
+  "num_logprobs": 100,
+  "llm_options": {
+    "n_ctx": 2048,
+    "n_batch": 64,
+    "n_threads": 1,
+    "n_gpu_layers": 0,
+    "seed": 123,
+    "verbose": false
+  },
+  "carrier_text": " building has been transformed into a charming railway museum with an extensive collection of historic steam engines that have traveled from around the world. Visitors can learn about the fascinating history of railways from the perspective of the engineers and the people who have built them for over one hundred years. The museum also features exhibits on the history of the railroad industry as well as the development of new technologies and innovations that have shaped the industry today. It",
+  "visible_prefix": "Dear friend,\nThe old station"
+}
