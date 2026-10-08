@@ -80,6 +80,8 @@ innocuous \
 
 For more check the [Showcase](./docs/showcase) section in the docs and the [Example Scripts](./examples).
 
+For a reproducible UTF-8 example, see the [railway postcard](./docs/showcase/postcard.md): a saved carrier, exact model checksum, and a script that independently decodes `bring tea ☕` from the text.
+
 ---
 
 ### Use Cases
