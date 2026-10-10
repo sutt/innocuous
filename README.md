@@ -34,7 +34,47 @@ print(recovered_data)
 
 **So the hidden message within story of the wizard is "`pip install innocuous`"!** How can this be? Read on to find out, or install the package and start using it yourself...
 
-TODO: Maybe add one more example inside a detail tag where message is "the message could be anything".
+<details>
+<summary><strong>Another innocuous message (yard-sale bulletin) -- "the message could be anything"</strong></summary>
+
+This one hides `the message could be anything` inside an ordinary neighborhood yard-sale bulletin -- the kind of text you might post on a community forum. Same library, different cover genre (not the wizard fable or king poem).
+
+```python
+from stego_llm import main_encode, main_decode
+
+initial_prompt = (
+    "Write a friendly neighborhood bulletin for a weekend yard sale on Oak Street. "
+    "Keep it under 130 words in a warm, ordinary voice suitable for a community forum post:\n"
+    "This Saturday we're having a yard sale on Oak Street from 8am to 2pm. "
+    "We've cleared out the garage and the driveway will be full of"
+)
+message = "the message could be anything"
+
+# Encode (needs a Llama.cpp GGUF via INNOCUOUS_LLM_PATH or llm_path=)
+coded = main_encode(initial_prompt=initial_prompt, msg=message.encode(), chunk_size=2, num_logprobs=40)
+print(coded[len(initial_prompt):])
+
+# Decode -- recovers the original bytes
+print(main_decode(encoded_prompt=coded, initial_prompt=initial_prompt, chunk_size=2, num_logprobs=40))
+# b'the message could be anything'
+```
+
+Quick check without a model (uses the repo mock LLM):
+
+```bash
+python examples/yard_sale_note.py --dry-run   # packing check
+python examples/yard_sale_note.py --mock      # mock LLM encode->decode
+```
+
+Live round-trip:
+
+```bash
+python examples/yard_sale_note.py --llm-path /path/to/model.gguf
+```
+
+See [`examples/yard_sale_note.py`](./examples/yard_sale_note.py).
+
+</details>
 
 ---
 
@@ -182,7 +222,7 @@ initial_prompt = "Write a poem about a puppy:\n"
 
 generated_text = main_encode(
     initial_prompt=initial_prompt,
-    encoded_prompt=message_to_encode.encode("utf-8"),
+    msg=message_to_encode.encode("utf-8"),
     chunk_size=3, num_logprobs=100,
     llm_path="path/to/model.gguf",  # only nec if `INNOCUOUS_LLM_PATH` not set
 )
