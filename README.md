@@ -34,7 +34,28 @@ print(recovered_data)
 
 **So the hidden message within story of the wizard is "`pip install innocuous`"!** How can this be? Read on to find out, or install the package and start using it yourself...
 
-TODO: Maybe add one more example inside a detail tag where message is "the message could be anything".
+<details>
+<summary><b>One more example: the message could be anything</b></summary>
+
+> _Hello there everyone at your convenience we would like to take a moment to thank you for sharing such lovely memories here and in many different places all throughout our lives. It brings back many wonderful experiences and reminds us of those that made life such as the love of nature that we now have for our neighbor John from a previous community who has lived for more than twenty years but who now passed away in January and we still have such lovely memories to hold and cherish_
+
+```python
+from stego_llm import main_decode
+initial_prompt = "Write a short, cheerful note a neighbor might leave on a community bulletin board:\n"
+cryptic_text = "Hello there everyone at your convenience we would like ..."  # full text above
+print(main_decode(
+    encoded_prompt=initial_prompt + cryptic_text,
+    initial_prompt=initial_prompt,
+    chunk_size=3,
+    num_logprobs=100,
+    llm_path="qwen2.5-0.5b-instruct-q4_k_m.gguf",
+))
+# prints: b'the message could be anything'
+```
+
+Generated with the small [Qwen2.5-0.5B-Instruct Q4_K_M](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF) model (~490 MB, runs on CPU). Reproduce with [`examples/anything_message.py`](./examples/anything_message.py).
+
+</details>
 
 ---
 
@@ -182,7 +203,7 @@ initial_prompt = "Write a poem about a puppy:\n"
 
 generated_text = main_encode(
     initial_prompt=initial_prompt,
-    encoded_prompt=message_to_encode.encode("utf-8"),
+    msg=message_to_encode.encode("utf-8"),
     chunk_size=3, num_logprobs=100,
     llm_path="path/to/model.gguf",  # only nec if `INNOCUOUS_LLM_PATH` not set
 )
