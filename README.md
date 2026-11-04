@@ -34,7 +34,44 @@ print(recovered_data)
 
 **So the hidden message within story of the wizard is "`pip install innocuous`"!** How can this be? Read on to find out, or install the package and start using it yourself...
 
-TODO: Maybe add one more example inside a detail tag where message is "the message could be anything".
+<details>
+<summary><b>Example: Coded Plaintext Message ("the message could be anything")</b></summary>
+
+You can encode arbitrary text messages into innocuous cover text:
+
+```python
+from stego_llm import main_encode, main_decode
+
+# 1. Secret message to hide
+secret_message = "The rendezvous is at midnight by the old lighthouse."
+msg_bytes = secret_message.encode("utf-8")
+
+# 2. Cover prompt
+initial_prompt = "Below is an iambic pentameter poem. Complete it:\nThe king"
+
+# 3. Encode into innocuous generated text
+encoded_text = main_encode(
+    initial_prompt=initial_prompt,
+    msg=msg_bytes,
+    chunk_size=2,
+    num_logprobs=40,
+)
+
+# 4. Decode message back
+decoded_bytes = main_decode(
+    encoded_prompt=encoded_text,
+    initial_prompt=initial_prompt,
+    chunk_size=2,
+    num_logprobs=40,
+)
+
+assert msg_bytes == decoded_bytes
+print(decoded_bytes.decode("utf-8"))
+# prints: 'The rendezvous is at midnight by the old lighthouse.'
+```
+
+See [examples/coded_message.py](./examples/coded_message.py) for the complete runnable script.
+</details>
 
 ---
 
