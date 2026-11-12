@@ -34,7 +34,22 @@ print(recovered_data)
 
 **So the hidden message within story of the wizard is "`pip install innocuous`"!** How can this be? Read on to find out, or install the package and start using it yourself...
 
-TODO: Maybe add one more example inside a detail tag where message is "the message could be anything".
+<details>
+<summary>Another example, no model download</summary>
+
+The hidden bytes can be any short payload. This one hides `hello world` and reads it back from the logits already recorded in the test suite, so it runs on a CPU in about a second:
+
+```bash
+python examples/coded_message.py
+```
+
+```text
+secret message : b'hello world'
+decoded message: b'hello world'
+round trip     : OK
+```
+
+</details>
 
 ---
 
