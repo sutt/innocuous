@@ -1,0 +1,16 @@
+{
+  "prompt": "Write a short, ordinary morning weather bulletin for a village newsletter. Use plain English prose.\nThe morning",
+  "encoded_prompt": "Write a short, ordinary morning weather bulletin for a village newsletter. Use plain English prose.\nThe morning of the first day of winter brings an unusually cold day for our village. Expect clear weather for",
+  "payload_hex": "00ff2a7e",
+  "chunk_size": 2,
+  "num_logprobs": 100,
+  "model_sha256": "041474553fcabfc2a2d67903f9d2c2e50bd92528e670da4f33b5d0ce6e59fd55",
+  "llama_cpp_python": "0.3.18",
+  "llm_options": {
+    "n_ctx": 2048,
+    "n_threads": 2,
+    "n_batch": 128,
+    "seed": 42,
+    "verbose": false
+  }
+}

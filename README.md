@@ -278,6 +278,10 @@ The larger the **N** in the top-N tokens you consider at each step: the **more i
 
 For more information, see the Algorithm Description below and see the docs on encoding algorithms.
 
+### Binary inventory-tag example
+
+[Encode four binary bytes in a weather bulletin](./examples/inventory_tag.md), with a runnable script and a real-model round-trip record.
+
 ### Contributing
 
 Innocuous is very much open-source as all good communication must be: the sender and reciever of information must agree on every detail of how the communication was encoded and decoded. We welcome contributions.
