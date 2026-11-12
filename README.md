@@ -250,6 +250,24 @@ done. it worked!
 
 Or checkout the jupyter notebook with example of both encode and decode [here](./examples/simple-example.ipynb).
 
+**No model file? Use the coded-message example.** `examples/coded_message.py` hides a
+message in generated text and recovers it using the recorded logits in
+`tests/data/recorded-logits/`, so it needs no GGUF download and finishes in about a
+second:
+
+```bash
+python examples/coded_message.py
+# initial prompt : 'Below is an iambic penatameter poem. Complete it:\nThe king'
+# secret message : b'hello world'
+# carrier text   : 'Below is an iambic penatameter poem. Complete it:\nThe king with a scepter in hand so bold,...'
+# decoded message: b'hello world'
+# round trip     : OK
+```
+
+It accepts `--message`, `--prompt`, `--chunk-size`, `--num-logprobs` and `--log-file`,
+prints the carrier text, and exits non-zero if the round trip fails — so it doubles as
+a smoke test for a fresh install.
+
 ---
 
 ### How it works
