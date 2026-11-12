@@ -1,7 +1,8 @@
 """Hide a short message in generated text and read it back.
 
 Uses the logits already recorded in tests/data/recorded-logits, the same
-replay the test suite uses. No model download and no GPU.
+replay the test suite uses. No model download, no GPU, and no llama-cpp-python
+install: the script puts a stand-in module in place before stego_llm imports it.
 
 Run from the repository root:
 
@@ -11,12 +12,28 @@ Run from the repository root:
 from __future__ import annotations
 
 import sys
+import types
 from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+# The replay path never constructs a model. llama-cpp-python has no wheel
+# here, and stego_llm imports it at module load, so a stand-in is enough.
+if "llama_cpp" not in sys.modules:
+    _llama = types.ModuleType("llama_cpp")
+
+    def _llama_log_set(*_args, **_kwargs):
+        return None
+
+    class _Llama:
+        pass
+
+    _llama.llama_log_set = _llama_log_set
+    _llama.Llama = _Llama
+    sys.modules["llama_cpp"] = _llama
 
 from stego_llm.llm.mock import (  # noqa: E402
     create_mock_get_token_probabilities,
