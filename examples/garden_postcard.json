@@ -1,0 +1,18 @@
+{
+  "format": "innocuous-postcard-v1",
+  "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+  "llama_cpp_python": "0.3.16",
+  "prompt": "Write a friendly postcard about a quiet walk through a garden.\nDear friend,\n",
+  "carrier": "Write a friendly postcard about a quiet walk through a garden.\nDear friend,\nAs I walk through the peaceful garden, I can feel the warmth of the sun on my skin while enjoying the beautiful views around me. This quiet walk is perfect for me and my friends as we enjoy each other in a peaceful and relaxed setting with no interruptions and only the gentle sounds of the wind and nature to accompany us through the walkways that surround us and around our feet and toes that we are enjoying in our walks together as well with our families in this",
+  "settings": {
+    "chunk_size": 2,
+    "num_logprobs": 100,
+    "llm_extra_args": {
+      "n_ctx": 2048,
+      "n_threads": 1,
+      "n_gpu_layers": 0,
+      "seed": 42,
+      "verbose": false
+    }
+  }
+}
